@@ -13,10 +13,14 @@
 		EAD98C7D29DE85C8008EB183 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EAD98C7C29DE85C8008EB183 /* Assets.xcassets */; };
 		EAD98C8929DE85F0008EB183 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAD98C8829DE85F0008EB183 /* SnapKit */; };
 		EAD98C8C29DE85FD008EB183 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAD98C8B29DE85FD008EB183 /* Then */; };
-		EAD98C8F29DE864B008EB183 /* ViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98C8E29DE864B008EB183 /* ViewController+Ext.swift */; };
-		EAD98C9129DE8657008EB183 /* View+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98C9029DE8657008EB183 /* View+Ext.swift */; };
+		EAD98C8F29DE864B008EB183 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98C8E29DE864B008EB183 /* UIViewController+Ext.swift */; };
+		EAD98C9129DE8657008EB183 /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98C9029DE8657008EB183 /* UIView+Ext.swift */; };
 		EAD98C9329DE8C70008EB183 /* AlinedIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98C9229DE8C70008EB183 /* AlinedIconButton.swift */; };
 		EAD98C9629DE8CC9008EB183 /* CustomViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98C9529DE8CC9008EB183 /* CustomViewTest.swift */; };
+		EAD98C9B29DE9A2A008EB183 /* Sunflower-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EAD98C9829DE9A2A008EB183 /* Sunflower-Light.ttf */; };
+		EAD98C9C29DE9A2A008EB183 /* Sunflower-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EAD98C9929DE9A2A008EB183 /* Sunflower-Bold.ttf */; };
+		EAD98C9D29DE9A2A008EB183 /* Sunflower-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EAD98C9A29DE9A2A008EB183 /* Sunflower-Medium.ttf */; };
+		EAD98C9F29DE9D3C008EB183 /* UIFont+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98C9E29DE9D3C008EB183 /* UIFont+Ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,10 +30,14 @@
 		EAD98C7729DE85C7008EB183 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		EAD98C7C29DE85C8008EB183 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EAD98C8129DE85C8008EB183 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EAD98C8E29DE864B008EB183 /* ViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Ext.swift"; sourceTree = "<group>"; };
-		EAD98C9029DE8657008EB183 /* View+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Ext.swift"; sourceTree = "<group>"; };
+		EAD98C8E29DE864B008EB183 /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
+		EAD98C9029DE8657008EB183 /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		EAD98C9229DE8C70008EB183 /* AlinedIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlinedIconButton.swift; sourceTree = "<group>"; };
 		EAD98C9529DE8CC9008EB183 /* CustomViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewTest.swift; sourceTree = "<group>"; };
+		EAD98C9829DE9A2A008EB183 /* Sunflower-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sunflower-Light.ttf"; sourceTree = "<group>"; };
+		EAD98C9929DE9A2A008EB183 /* Sunflower-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sunflower-Bold.ttf"; sourceTree = "<group>"; };
+		EAD98C9A29DE9A2A008EB183 /* Sunflower-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Sunflower-Medium.ttf"; sourceTree = "<group>"; };
+		EAD98C9E29DE9D3C008EB183 /* UIFont+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +72,7 @@
 		EAD98C7229DE85C7008EB183 /* CustomLoadingBtnTutorial */ = {
 			isa = PBXGroup;
 			children = (
+				EAD98C9729DE9A13008EB183 /* Fonts */,
 				EAD98C9429DE8C9A008EB183 /* Componets */,
 				EAD98C8D29DE8638008EB183 /* Extension */,
 				EAD98C7329DE85C7008EB183 /* AppDelegate.swift */,
@@ -79,8 +88,9 @@
 		EAD98C8D29DE8638008EB183 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				EAD98C8E29DE864B008EB183 /* ViewController+Ext.swift */,
-				EAD98C9029DE8657008EB183 /* View+Ext.swift */,
+				EAD98C8E29DE864B008EB183 /* UIViewController+Ext.swift */,
+				EAD98C9029DE8657008EB183 /* UIView+Ext.swift */,
+				EAD98C9E29DE9D3C008EB183 /* UIFont+Ext.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -91,6 +101,16 @@
 				EAD98C9229DE8C70008EB183 /* AlinedIconButton.swift */,
 			);
 			path = Componets;
+			sourceTree = "<group>";
+		};
+		EAD98C9729DE9A13008EB183 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				EAD98C9929DE9A2A008EB183 /* Sunflower-Bold.ttf */,
+				EAD98C9829DE9A2A008EB183 /* Sunflower-Light.ttf */,
+				EAD98C9A29DE9A2A008EB183 /* Sunflower-Medium.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,6 +180,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				EAD98C7D29DE85C8008EB183 /* Assets.xcassets in Resources */,
+				EAD98C9B29DE9A2A008EB183 /* Sunflower-Light.ttf in Resources */,
+				EAD98C9C29DE9A2A008EB183 /* Sunflower-Bold.ttf in Resources */,
+				EAD98C9D29DE9A2A008EB183 /* Sunflower-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,9 +195,10 @@
 			files = (
 				EAD98C7829DE85C7008EB183 /* ViewController.swift in Sources */,
 				EAD98C7429DE85C7008EB183 /* AppDelegate.swift in Sources */,
-				EAD98C9129DE8657008EB183 /* View+Ext.swift in Sources */,
+				EAD98C9129DE8657008EB183 /* UIView+Ext.swift in Sources */,
 				EAD98C9629DE8CC9008EB183 /* CustomViewTest.swift in Sources */,
-				EAD98C8F29DE864B008EB183 /* ViewController+Ext.swift in Sources */,
+				EAD98C9F29DE9D3C008EB183 /* UIFont+Ext.swift in Sources */,
+				EAD98C8F29DE864B008EB183 /* UIViewController+Ext.swift in Sources */,
 				EAD98C9329DE8C70008EB183 /* AlinedIconButton.swift in Sources */,
 				EAD98C7629DE85C7008EB183 /* SceneDelegate.swift in Sources */,
 			);

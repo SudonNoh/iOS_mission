@@ -36,6 +36,7 @@ class AlignedIconButton : UIButton {
     convenience init(
         iconAlign: IconAlignment = .leading,
         title: String = "타이틀 없음",
+        font: UIFont = UIFont.Sunflower(.bold, size:20),
         bgColor: UIColor = .systemBlue,
         tintColor: UIColor = .white,
         cornerRadius: CGFloat = 8,
@@ -44,6 +45,7 @@ class AlignedIconButton : UIButton {
     ) {
         self.init(type: .system)
         self.setTitle(title, for: .normal)
+        self.titleLabel?.font = font
         self.backgroundColor = bgColor
         self.tintColor = tintColor
         self.layer.cornerRadius = cornerRadius

@@ -60,7 +60,7 @@ class ViewController: UIViewController {
 //                $0.setTitle("Button \(index)", for: .normal)
 //            }
             AlignedIconButton(
-                title: "Button \(index)",
+                title: "버튼 \(index)",
                 bgColor: .systemCyan,
                 tintColor: .black,
                 cornerRadius: 10,

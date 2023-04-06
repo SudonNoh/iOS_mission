@@ -26,7 +26,7 @@ class CustomViewTest: UIView {
         
         let btn = AlignedIconButton(
             iconAlign: .trailing,
-            title: "Button",
+            title: "버튼",
             bgColor: .systemCyan,
             tintColor: .black,
             cornerRadius: 10,
