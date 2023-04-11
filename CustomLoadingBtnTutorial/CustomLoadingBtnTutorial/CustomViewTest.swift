@@ -24,7 +24,7 @@ class CustomViewTest: UIView {
     fileprivate func setupUI(){
         self.backgroundColor = .systemYellow
         
-        let btn = AlignedIconButton(
+        let btn = LoadingButton(
             iconAlign: .trailing,
             title: "버튼",
             bgColor: .systemCyan,

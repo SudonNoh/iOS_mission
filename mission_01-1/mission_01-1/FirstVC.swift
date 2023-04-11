@@ -161,11 +161,10 @@ class FirstVC: UIViewController {
     }
 }
 
-
 #if DEBUG
 import SwiftUI
 
-struct VCPreView: PreviewProvider {
+struct FirstVCPreView: PreviewProvider {
     static var previews: some View {
         FirstVC().toPreview()
     }

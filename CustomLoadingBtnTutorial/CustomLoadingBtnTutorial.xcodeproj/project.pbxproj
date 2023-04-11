@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EAC1BC7029DEBA2E00A838B9 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC1BC6F29DEBA2E00A838B9 /* LoadingButton.swift */; };
+		EAD1222D29DFD69C00DCE933 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EAD1222C29DFD69C00DCE933 /* RxCocoa */; };
+		EAD1222F29DFD69C00DCE933 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = EAD1222E29DFD69C00DCE933 /* RxRelay */; };
+		EAD1223129DFD69C00DCE933 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EAD1223029DFD69C00DCE933 /* RxSwift */; };
 		EAD98C7429DE85C7008EB183 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98C7329DE85C7008EB183 /* AppDelegate.swift */; };
 		EAD98C7629DE85C7008EB183 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98C7529DE85C7008EB183 /* SceneDelegate.swift */; };
 		EAD98C7829DE85C7008EB183 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD98C7729DE85C7008EB183 /* ViewController.swift */; };
@@ -24,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EAC1BC6F29DEBA2E00A838B9 /* LoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
 		EAD98C7029DE85C7008EB183 /* CustomLoadingBtnTutorial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomLoadingBtnTutorial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAD98C7329DE85C7008EB183 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAD98C7529DE85C7008EB183 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,7 +50,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAD1222D29DFD69C00DCE933 /* RxCocoa in Frameworks */,
 				EAD98C8929DE85F0008EB183 /* SnapKit in Frameworks */,
+				EAD1223129DFD69C00DCE933 /* RxSwift in Frameworks */,
+				EAD1222F29DFD69C00DCE933 /* RxRelay in Frameworks */,
 				EAD98C8C29DE85FD008EB183 /* Then in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				EAD98C9229DE8C70008EB183 /* AlinedIconButton.swift */,
+				EAC1BC6F29DEBA2E00A838B9 /* LoadingButton.swift */,
 			);
 			path = Componets;
 			sourceTree = "<group>";
@@ -132,6 +141,9 @@
 			packageProductDependencies = (
 				EAD98C8829DE85F0008EB183 /* SnapKit */,
 				EAD98C8B29DE85FD008EB183 /* Then */,
+				EAD1222C29DFD69C00DCE933 /* RxCocoa */,
+				EAD1222E29DFD69C00DCE933 /* RxRelay */,
+				EAD1223029DFD69C00DCE933 /* RxSwift */,
 			);
 			productName = CustomLoadingBtnTutorial;
 			productReference = EAD98C7029DE85C7008EB183 /* CustomLoadingBtnTutorial.app */;
@@ -164,6 +176,7 @@
 			packageReferences = (
 				EAD98C8729DE85F0008EB183 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				EAD98C8A29DE85FD008EB183 /* XCRemoteSwiftPackageReference "Then" */,
+				EAD1222B29DFD69C00DCE933 /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = EAD98C7129DE85C7008EB183 /* Products */;
 			projectDirPath = "";
@@ -193,6 +206,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAC1BC7029DEBA2E00A838B9 /* LoadingButton.swift in Sources */,
 				EAD98C7829DE85C7008EB183 /* ViewController.swift in Sources */,
 				EAD98C7429DE85C7008EB183 /* AppDelegate.swift in Sources */,
 				EAD98C9129DE8657008EB183 /* UIView+Ext.swift in Sources */,
@@ -399,6 +413,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		EAD1222B29DFD69C00DCE933 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 		EAD98C8729DE85F0008EB183 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -418,6 +440,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		EAD1222C29DFD69C00DCE933 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EAD1222B29DFD69C00DCE933 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		EAD1222E29DFD69C00DCE933 /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EAD1222B29DFD69C00DCE933 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		EAD1223029DFD69C00DCE933 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EAD1222B29DFD69C00DCE933 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
 		EAD98C8829DE85F0008EB183 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EAD98C8729DE85F0008EB183 /* XCRemoteSwiftPackageReference "SnapKit" */;

@@ -10,5 +10,17 @@ import UIKit
 class SecondVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.view.backgroundColor = .yellow
     }
 }
+
+#if DEBUG
+import SwiftUI
+
+struct SecondVCPreView: PreviewProvider {
+    static var previews: some View {
+        SecondVC().toPreview().ignoresSafeArea()
+    }
+}
+#endif
