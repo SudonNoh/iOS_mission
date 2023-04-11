@@ -20,10 +20,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         // 처음 보일 view Controller
-        let viewController = FirstVC()
+        let viewController = ForthVC()
+        
+        let navVC = UINavigationController(rootViewController: viewController)
         
         // 위에서 만든 view Controller를 첫 화면으로 띄우기
-        window?.rootViewController = viewController
+        window?.rootViewController = navVC
         // 화면에 보이게 한다.
         window?.makeKeyAndVisible()
         window?.windowScene = windowScene
