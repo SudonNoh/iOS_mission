@@ -81,7 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				EAD98C9729DE9A13008EB183 /* Fonts */,
-				EAD98C9429DE8C9A008EB183 /* Componets */,
+				EAD98C9429DE8C9A008EB183 /* Components */,
 				EAD98C8D29DE8638008EB183 /* Extension */,
 				EAD98C7329DE85C7008EB183 /* AppDelegate.swift */,
 				EAD98C7529DE85C7008EB183 /* SceneDelegate.swift */,
@@ -103,13 +103,13 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
-		EAD98C9429DE8C9A008EB183 /* Componets */ = {
+		EAD98C9429DE8C9A008EB183 /* Components */ = {
 			isa = PBXGroup;
 			children = (
 				EAD98C9229DE8C70008EB183 /* AlinedIconButton.swift */,
 				EAC1BC6F29DEBA2E00A838B9 /* LoadingButton.swift */,
 			);
-			path = Componets;
+			path = Components;
 			sourceTree = "<group>";
 		};
 		EAD98C9729DE9A13008EB183 /* Fonts */ = {
