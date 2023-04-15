@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         // 처음 보일 view Controller
-        let viewController = SecondVC()
+        let viewController = ThirdVC()
         
         let navVC = UINavigationController(rootViewController: viewController)
         
