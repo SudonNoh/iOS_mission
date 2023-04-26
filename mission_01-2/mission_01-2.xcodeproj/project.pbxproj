@@ -12,6 +12,7 @@
 		EA1D6E1B29E6884B006F4815 /* FirstVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1D6E1A29E6884B006F4815 /* FirstVC.swift */; };
 		EA1D6E2029E6884C006F4815 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA1D6E1F29E6884C006F4815 /* Assets.xcassets */; };
 		EA1D6E2B29E689EB006F4815 /* ViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1D6E2A29E689EB006F4815 /* ViewController+Ext.swift */; };
+		EA1FB78F29F8A80600E31329 /* ForthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1FB78E29F8A80600E31329 /* ForthVC.swift */; };
 		EA26B69429EAE04B00BB50BA /* CustomLbl.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA26B69329EAE04B00BB50BA /* CustomLbl.swift */; };
 		EA50286229E68AFC00D8D09E /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EA50286129E68AFC00D8D09E /* SnapKit */; };
 		EA50286529E68B0600D8D09E /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EA50286429E68B0600D8D09E /* Then */; };
@@ -20,6 +21,7 @@
 		EAD0F53E29E93715004B597F /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD0F53D29E93715004B597F /* TestView.swift */; };
 		EAD0F54129E937A3004B597F /* View+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD0F54029E937A3004B597F /* View+Ext.swift */; };
 		EAD0F54429E94DC7004B597F /* SecondVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD0F54329E94DC7004B597F /* SecondVC.swift */; };
+		EAEFE0ED29F6825300DF9712 /* CustomStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEFE0EC29F6825300DF9712 /* CustomStackView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,12 +32,14 @@
 		EA1D6E1F29E6884C006F4815 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EA1D6E2429E6884C006F4815 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EA1D6E2A29E689EB006F4815 /* ViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Ext.swift"; sourceTree = "<group>"; };
+		EA1FB78E29F8A80600E31329 /* ForthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForthVC.swift; sourceTree = "<group>"; };
 		EA26B69329EAE04B00BB50BA /* CustomLbl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLbl.swift; sourceTree = "<group>"; };
 		EAAAB79529EAC67C0026D87C /* ThirdVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdVC.swift; sourceTree = "<group>"; };
 		EAAB8BB129E7C3D7006B9908 /* AlignedIconBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignedIconBtn.swift; sourceTree = "<group>"; };
 		EAD0F53D29E93715004B597F /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		EAD0F54029E937A3004B597F /* View+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Ext.swift"; sourceTree = "<group>"; };
 		EAD0F54329E94DC7004B597F /* SecondVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondVC.swift; sourceTree = "<group>"; };
+		EAEFE0EC29F6825300DF9712 /* CustomStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStackView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +82,7 @@
 				EA1D6E1A29E6884B006F4815 /* FirstVC.swift */,
 				EAD0F54329E94DC7004B597F /* SecondVC.swift */,
 				EAAAB79529EAC67C0026D87C /* ThirdVC.swift */,
+				EA1FB78E29F8A80600E31329 /* ForthVC.swift */,
 				EA1D6E1F29E6884C006F4815 /* Assets.xcassets */,
 				EA1D6E2429E6884C006F4815 /* Info.plist */,
 			);
@@ -87,6 +92,8 @@
 		EAD0F53C29E91F78004B597F /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EA26B69329EAE04B00BB50BA /* CustomLbl.swift */,
+				EAEFE0EC29F6825300DF9712 /* CustomStackView.swift */,
 				EAAB8BB129E7C3D7006B9908 /* AlignedIconBtn.swift */,
 			);
 			path = Components;
@@ -97,7 +104,6 @@
 			children = (
 				EA1D6E2A29E689EB006F4815 /* ViewController+Ext.swift */,
 				EAD0F54029E937A3004B597F /* View+Ext.swift */,
-				EA26B69329EAE04B00BB50BA /* CustomLbl.swift */,
 			);
 			path = Ext;
 			sourceTree = "<group>";
@@ -194,6 +200,8 @@
 				EAAB8BB229E7C3D7006B9908 /* AlignedIconBtn.swift in Sources */,
 				EA26B69429EAE04B00BB50BA /* CustomLbl.swift in Sources */,
 				EA1D6E1729E6884B006F4815 /* AppDelegate.swift in Sources */,
+				EAEFE0ED29F6825300DF9712 /* CustomStackView.swift in Sources */,
+				EA1FB78F29F8A80600E31329 /* ForthVC.swift in Sources */,
 				EA1D6E2B29E689EB006F4815 /* ViewController+Ext.swift in Sources */,
 				EAD0F54429E94DC7004B597F /* SecondVC.swift in Sources */,
 				EA1D6E1929E6884B006F4815 /* SceneDelegate.swift in Sources */,
