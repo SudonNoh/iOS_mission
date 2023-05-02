@@ -9,7 +9,11 @@ class LoadingButton : UIButton {
         case loading
     }
     
-    var indicator : UIActivityIndicatorView? = nil
+    var indicatorType : IndicatorType = .sysDefault
+    
+    var indicatorColor : UIColor = .gray
+    
+    var indicator : UIView? = nil
     
     // 로딩 상태 변수
     var loadingState : LoadingState = .normal {
@@ -47,6 +51,7 @@ class LoadingButton : UIButton {
     /// convenience init
     /// 기존 생성자 + 추가적인 매개변수를 넣고 싶을 때 사용
     convenience init(
+        indicatorType: IndicatorType = .sysDefault,
         iconAlign: IconAlignment = .leading,
         title: String = "타이틀 없음",
         font: UIFont = UIFont.Sunflower(.bold, size:20),
@@ -57,10 +62,12 @@ class LoadingButton : UIButton {
         padding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
     ) {
         self.init(type: .system)
+        self.indicatorType = indicatorType
         self.setTitle(title, for: .normal)
         self.titleLabel?.font = font
         self.backgroundColor = bgColor
         self.tintColor = tintColor
+        self.indicatorColor = tintColor
         self.layer.cornerRadius = cornerRadius
         self.setImage(icon, for: .normal)
         self.padding = padding
@@ -138,11 +145,21 @@ extension LoadingButton {
         // self.isUserInteractionEnabled = false
         
         // indicator 준비 과정
+        // indicator가 없으면 indicator 만들어서 넣기
         if self.indicator == nil {
-            let btnIndicator = UIActivityIndicatorView(style: .large).then {
-                $0.color = .white
-                $0.startAnimating()
-            }
+            
+            // Custom Indicator 적용
+            let btnIndicator = indicatorType.getIndicator(self.indicatorColor)
+            // 크기 조절
+            btnIndicator.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+            btnIndicator.startAnimating()
+            
+            // Custom Indicator 전
+            // let btnIndicator = UIActivityIndicatorView(style: .large).then {
+            //     $0.color = .white
+            //     $0.startAnimating()
+            // }
+            
             self.addSubview(btnIndicator)
             btnIndicator.snp.makeConstraints {
                 $0.center.equalToSuperview()

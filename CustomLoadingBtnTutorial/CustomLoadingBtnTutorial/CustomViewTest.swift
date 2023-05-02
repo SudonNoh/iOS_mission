@@ -25,13 +25,16 @@ class CustomViewTest: UIView {
         self.backgroundColor = .systemYellow
         
         let btn = LoadingButton(
+            indicatorType: .material,
             iconAlign: .trailing,
             title: "버튼",
             bgColor: .systemCyan,
-            tintColor: .black,
+            tintColor: .white,
             cornerRadius: 10,
             icon: UIImage(systemName: "pencil.circle")
         )
+        
+        btn.loadingState = .loading
         
         self.addSubview(btn)
         
