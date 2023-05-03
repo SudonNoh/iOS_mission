@@ -2,13 +2,24 @@ import Foundation
 
 // MARK: - TodosResponse
 struct TodosResponse: Codable {
-    let data: [Datum]?
+    let data: [Todo]?
     let meta: Meta?
     let message: String?
 }
 
+struct BaseListResponse<T: Codable>: Codable {
+    let data: [T]?
+    let meta: Meta?
+    let message: String?
+}
+
+struct BaseResponse<T: Codable>: Codable {
+    let data: T?
+    let message: String?
+}
+
 // MARK: - Datum
-struct Datum: Codable {
+struct Todo: Codable {
     let id: Int?
     let title: String?
     let isDone: Bool?

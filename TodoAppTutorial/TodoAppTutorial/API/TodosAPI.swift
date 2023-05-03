@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MultipartForm
 
 enum TodosAPI {
     static let version = "v1"
@@ -17,41 +18,24 @@ enum TodosAPI {
     #endif
     
     enum ApiError : Error {
-        case passingError
         case noContent
+        case unauthorized
         case decodingError
+        case jsonEncodingError
+        case notAllowedUrl
         case badStatus(code: Int)
-    }
-    
-    static func fetchTodos(page: Int = 1, completion: @escaping (Result<TodosResponse, ApiError>) -> Void) {
-        // 1. urlRequest를 만든다.
-        let urlString = baseURL + "/todos" + "?page=\(page)"
-        let url = URL(string: urlString)!
+        case unknown(_ err: Error?)
         
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "GET"
-        urlRequest.addValue("application/json", forHTTPHeaderField: "accept")
-        
-        // 2. urlSession으로 API를 호출한다.
-        URLSession.shared.dataTask(with: urlRequest) { data, urlResponse, err in
-            
-            print("data : \(data)")
-            print("urlResponse : \(urlResponse)")
-            print("err : \(err)")
-            
-            if let jsonData = data {
-                do {
-                    // json으로 되어있는 데이터를 struct로 변경, 즉 디코딩/데이터 파싱
-                    let todosResponse = try JSONDecoder().decode(TodosResponse.self, from: jsonData)
-                    let modelObjects = todosResponse.data
-                    print("todosResponse : \(todosResponse)")
-                    completion(.success(todosResponse))
-                } catch {
-                    completion(.failure(ApiError.decodingError))
-                }
+        var info : String {
+            switch self {
+            case .noContent :           return "데이터가 없습니다."
+            case .decodingError :       return "디코딩 에러입니다."
+            case .jsonEncodingError :   return "유효한 JSON 형식이 아닙니다."
+            case .unauthorized :        return "인증되지 않은 사용자입니다.."
+            case .notAllowedUrl :       return "올바른 url 형식이 아닙니다."
+            case .badStatus(let code) : return "상태코드 \(code )에러입니다."
+            case .unknown(let err) :    return "알 수 없는 에러입니다. \(err) 입니다."
             }
-        }.resume()
-        
-        // 3. API 호출에 대한 응답을 받는다.
+        }
     }
 }
