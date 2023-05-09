@@ -1,12 +1,30 @@
 {
   "pins" : [
     {
+      "identity" : "combinecocoa",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CombineCommunity/CombineCocoa.git",
+      "state" : {
+        "revision" : "7300c75ff9e072aa7fd0fccefcc88f74aae9bf56",
+        "version" : "0.4.1"
+      }
+    },
+    {
       "identity" : "multipartform",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davbeck/MultipartForm",
       "state" : {
         "revision" : "c91979ea956a360bf84f0cc480afbcc7c946c753",
         "version" : "0.1.0"
+      }
+    },
+    {
+      "identity" : "rxswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactiveX/RxSwift.git",
+      "state" : {
+        "revision" : "b4307ba0b6425c0ba4178e138799946c3da594f8",
+        "version" : "6.5.0"
       }
     }
   ],
