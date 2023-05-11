@@ -18,8 +18,94 @@ class TodosVM: ObservableObject {
     
     init() {
         print(#fileID, #function, #line, "- ")
+        
+        Task {
+            let response = await TodosAPI.addTodoAndFetchTodosWithAsyncNoErr(title: "새롭게 추가된 할 일 입니다.")
+            print("response : \(response)")
+        }
+        
+        
+//        Task {
+//            do {
+//                let response = try await TodosAPI.fetchTodosWithAsync(page: 1)
+//                print("fetchTodosWithAsync")
+//                guard let data = response.data else { return }
+//
+//                for i in data {
+//                    print("\(i.id!), \(i.title!)")
+//                }
+//
+//            } catch {
+//                self.handleError(error)
+//            }
+//        }
+        
+//        for i in (0...30) {
+//            Task {
+//                do {
+//                    let response = try await TodosAPI.addATodoJSONWithAsync(title: "할 일을 추가합니다. \(i)")
+//                } catch {
+//                    self.handleError(error)
+//                }
+//            }
+//        }
 
-        // Combine
+//
+//        Task {
+//            do {
+//                let response = try await TodosAPI.searchTodosWithAsync(searchTerm: "작성하기")
+//                print("Async: \(response)")
+//            } catch {
+//                self.handleError(error)
+//            }
+//        }
+        
+//        Task {
+//            let response = await TodosAPI.fetchTodosWithAsyncResult()
+//            print("Async Result : \(response)")
+//        }
+    }
+
+// Combine
+/*
+//        TodosAPI.fetchTodosWithPublisherResult()
+//            .sink { result in
+//                switch result {
+//                case .failure(let failure):
+//                    self.handleError(failure)
+//                case .success(let baseListTodoResponse):
+//                    guard let dataList = baseListTodoResponse.data else {return}
+//                    for i in dataList {
+//                        print("id: \(i.id)")
+//                    }
+//                }
+//            }.store(in: &subscriptions)
+//        TodosAPI.fetchSeletedTodosWithPublisherMerge(seletedTodoIds: [3277, 3403, 3483, 3484])
+//            .sink { [weak self] completion in
+//                guard let self = self else {return}
+//                switch completion {
+//                case .failure(let failure):
+//                    self.handleError(failure)
+//                case .finished:
+//                    print(#fileID, #function, #line, "- finished")
+//                }
+//            } receiveValue: { response in
+//                print(#fileID, #function, #line, "- Merge 검색:: \(response)")
+//            }.store(in: &subscriptions)
+//
+//        TodosAPI.deleteSeletedTodosWithPublisherZip(seletedTodoIds: [3481, 3482, 3509, 3506])
+//            .sink { [weak self] completion in
+//                guard let self = self else {return}
+//                switch completion {
+//                case .failure(let failure):
+//                    self.handleError(failure)
+//                case .finished:
+//                    print(#fileID, #function, #line, "- finished")
+//                }
+//            } receiveValue: { response in
+//                print(#fileID, #function, #line, "- 삭제:: \(response)")
+//            }.store(in: &subscriptions)
+
 //        TodosAPI.addTodoAndFetchTodosWithPublisher(title: "새롭게 추가된 데이터입니다. 5월 9일 !")
 //                .sink { [weak self] completion in
 //                    guard let self = self else {return}
@@ -32,7 +118,7 @@ class TodosVM: ObservableObject {
 //                } receiveValue: { response in
 //                    print(#fileID, #function, #line, "- \(response)")
 //                }.store(in: &subscriptions)
-        
+    
 //        TodosAPI.deleteATodoWithPublisher(id: 3501)
 //            .sink { [weak self] completion in
 //                guard let self = self else {return}
@@ -46,7 +132,7 @@ class TodosVM: ObservableObject {
 //                print(#fileID, #function, #line, "- \(response)")
 //            }.store(in: &subscriptions)
 
-        
+    
 //        TodosAPI.editATodoWithPublisher(id: 3501, title: "새롭게 수정된 아이템입니다. 확인 부탁드립니다. 333")
 //            .sink { [weak self] completion in
 //                guard let self = self else { return }
@@ -85,7 +171,7 @@ class TodosVM: ObservableObject {
 //            } receiveValue: { response in
 //                print(#fileID, #function, #line, "- \(response)")
 //            }.store(in: &subscriptions)
-        
+    
 //        TodosAPI.addATodoWithPublisher(title: "새롭게 추가된 할 일 입니다.2")
 //            .sink { [weak self] completion in
 //                guard let self = self else { return }
@@ -99,7 +185,7 @@ class TodosVM: ObservableObject {
 //                print(#fileID, #function, #line, "- \(response)")
 //            }.store(in: &subscriptions)
 
-        
+    
 //        TodosAPI.fetchATodoWithPublisher(id: 3487)
 //            .sink { [weak self] completion in
 //
@@ -113,34 +199,21 @@ class TodosVM: ObservableObject {
 //            } receiveValue: { response in
 //                print(#fileID, #function, #line, "- \(response)")
 //            }.store(in: &subscriptions)
-        
-        //        TodosAPI.fetchTodosWithPublisher()
-        //            .sink { [weak self] completion in
-        //                guard let self = self else {return}
-        //                switch completion {
-        //                case .failure(let failure):
-        //                    self.handleError(failure)
-        //                case .finished:
-        //                    print(#fileID, #function, #line, "- finished")
-        //                }
-        //            } receiveValue: { response in
-        //                print(#fileID, #function, #line, "- \(response)")
-        //            }.store(in: &subscriptions)
+    
+    //        TodosAPI.fetchTodosWithPublisher()
+    //            .sink { [weak self] completion in
+    //                guard let self = self else {return}
+    //                switch completion {
+    //                case .failure(let failure):
+    //                    self.handleError(failure)
+    //                case .finished:
+    //                    print(#fileID, #function, #line, "- finished")
+    //                }
+    //            } receiveValue: { response in
+    //                print(#fileID, #function, #line, "- \(response)")
+    //            }.store(in: &subscriptions)
 
-            
-        //        TodosAPI.fetchTodosWithPublisherResult()
-        //            .sink { result in
-        //                switch result {
-        //                case .failure(let failure):
-        //                    self.handleError(failure)
-        //                case .success(let baseListTodoResponse):
-        //                    print(#fileID, #function, #line, "- fetchTodosWithPublisher/baseListTodoResponse: \(baseListTodoResponse)")
-        //                }
-        //            }.store(in: &subscriptions)
-            
-    }
-
-        
+*/
 // Rx
 /*
 //            TodosAPI.deleteSeletedTodosWithObservableMerge(seletedTodoIds: [3480, 3485, 3490, 3486, 3493])

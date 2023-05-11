@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA417BDE2A0CD20E00FDAD5B /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = EA417BDD2A0CD20E00FDAD5B /* CombineExt */; };
+		EA417BE02A0D04E100FDAD5B /* TodosAPI+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA417BDF2A0D04E100FDAD5B /* TodosAPI+Async.swift */; };
 		EA4BC2962A0A4BAB005721F1 /* TodosAPI+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4BC2952A0A4BAB005721F1 /* TodosAPI+Combine.swift */; };
 		EA4BC2992A0A7A5E005721F1 /* CombineCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA4BC2982A0A7A5E005721F1 /* CombineCocoa */; };
 		EA631A5D2A00EB32001C2755 /* TodoAppTutorialApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA631A5C2A00EB32001C2755 /* TodoAppTutorialApp.swift */; };
@@ -35,6 +37,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EA417BDF2A0D04E100FDAD5B /* TodosAPI+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodosAPI+Async.swift"; sourceTree = "<group>"; };
 		EA4BC2952A0A4BAB005721F1 /* TodosAPI+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodosAPI+Combine.swift"; sourceTree = "<group>"; };
 		EA631A592A00EB32001C2755 /* TodoAppTutorial.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoAppTutorial.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA631A5C2A00EB32001C2755 /* TodoAppTutorialApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoAppTutorialApp.swift; sourceTree = "<group>"; };
@@ -67,6 +70,7 @@
 				EA9A62622A025AA400200B7A /* RxCocoa in Frameworks */,
 				EA9A62662A025AA400200B7A /* RxSwift in Frameworks */,
 				EA4BC2992A0A7A5E005721F1 /* CombineCocoa in Frameworks */,
+				EA417BDE2A0CD20E00FDAD5B /* CombineExt in Frameworks */,
 				EA9A62582A01DCE000200B7A /* MultipartForm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -152,6 +156,7 @@
 				EA9A625E2A0246C100200B7A /* TodosAPI+Closure.swift */,
 				EA9A62672A025AE100200B7A /* TodosAPI+Rx.swift */,
 				EA4BC2952A0A4BAB005721F1 /* TodosAPI+Combine.swift */,
+				EA417BDF2A0D04E100FDAD5B /* TodosAPI+Async.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -195,6 +200,7 @@
 				EA9A62632A025AA400200B7A /* RxRelay */,
 				EA9A62652A025AA400200B7A /* RxSwift */,
 				EA4BC2982A0A7A5E005721F1 /* CombineCocoa */,
+				EA417BDD2A0CD20E00FDAD5B /* CombineExt */,
 			);
 			productName = TodoAppTutorial;
 			productReference = EA631A592A00EB32001C2755 /* TodoAppTutorial.app */;
@@ -228,6 +234,7 @@
 				EA9A62562A01DCE000200B7A /* XCRemoteSwiftPackageReference "MultipartForm" */,
 				EA9A62602A025AA400200B7A /* XCRemoteSwiftPackageReference "RxSwift" */,
 				EA4BC2972A0A7A5E005721F1 /* XCRemoteSwiftPackageReference "CombineCocoa" */,
+				EA417BDC2A0CD20E00FDAD5B /* XCRemoteSwiftPackageReference "CombineExt" */,
 			);
 			productRefGroup = EA631A5A2A00EB32001C2755 /* Products */;
 			projectDirPath = "";
@@ -270,6 +277,7 @@
 				EA9A625B2A01E54700200B7A /* URL+Ext.swift in Sources */,
 				EA631A6E2A00EC32001C2755 /* MainVC.swift in Sources */,
 				EA4BC2962A0A4BAB005721F1 /* TodosAPI+Combine.swift in Sources */,
+				EA417BE02A0D04E100FDAD5B /* TodosAPI+Async.swift in Sources */,
 				EA631A7C2A0102EF001C2755 /* UISearchBarWrapper.swift in Sources */,
 				EA631A7E2A010434001C2755 /* TodoRow.swift in Sources */,
 				EA631A702A00F4EE001C2755 /* TodoCell.swift in Sources */,
@@ -475,6 +483,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		EA417BDC2A0CD20E00FDAD5B /* XCRemoteSwiftPackageReference "CombineExt" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CombineCommunity/CombineExt.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		EA4BC2972A0A7A5E005721F1 /* XCRemoteSwiftPackageReference "CombineCocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CombineCommunity/CombineCocoa.git";
@@ -502,6 +518,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		EA417BDD2A0CD20E00FDAD5B /* CombineExt */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA417BDC2A0CD20E00FDAD5B /* XCRemoteSwiftPackageReference "CombineExt" */;
+			productName = CombineExt;
+		};
 		EA4BC2982A0A7A5E005721F1 /* CombineCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EA4BC2972A0A7A5E005721F1 /* XCRemoteSwiftPackageReference "CombineCocoa" */;
