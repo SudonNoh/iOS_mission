@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import RxSwift
 import RxRelay
-
+import RxCombine
 
 class TodosVM: ObservableObject {
     
@@ -19,11 +19,189 @@ class TodosVM: ObservableObject {
     init() {
         print(#fileID, #function, #line, "- ")
         
-        Task {
-            let response = await TodosAPI.addTodoAndFetchTodosWithAsyncNoErr(title: "새롭게 추가된 할 일 입니다.")
-            print("response : \(response)")
-        }
+        Just(1)
+            .mapAsyncr { value in
+                try await TodosAPI.fetchTodosWithAsync(page:value)
+            }
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("finished")
+                case .failure(let failure):
+                    print("failure : \(failure)")
+                }
+            } receiveValue: { response in
+                print("response : \(response)")
+            }
+            .store(in: &subscriptions)
         
+//        TodosAPI.genericAsyncToPublisher(asyncWork: {
+//            try await TodosAPI.fetchTodosWithAsync()
+//        })
+//        .sink { completion in
+//            switch completion {
+//            case .finished:
+//                print("finished")
+//            case .failure(let failure):
+//                print("failure : \(failure)")
+//            }
+//        } receiveValue: { response in
+//            print("response : \(response)")
+//        }
+//        .store(in: &subscriptions)
+        
+//        TodosAPI.fetchTodosAsyncToPublisher()
+//            .sink { completion in
+//                switch completion {
+//                case .finished:
+//                    print("finished")
+//                case .failure(let failure):
+//                    print("failure : \(failure)")
+//                }
+//            } receiveValue: { response in
+//                print("response : \(response)")
+//            }
+//            .store(in: &subscriptions)
+        
+        
+//        TodosAPI.fetchTodosWithPublisher()
+//            .asObservable()
+//            .subscribe(onNext: {
+//                print("onNext : \($0)")
+//            }, onError: {
+//                print("onError : \($0)")
+//            }, onCompleted: {
+//                print("onComplete")
+//            }, onDisposed: {
+//                print("onDisposed")
+//            })
+//            .disposed(by: disposeBag)
+
+//        TodosAPI.fetchTodosWithObservable()
+//            .publisher
+//            .sink { completion in
+//                switch completion {
+//                case .finished:
+//                    print("finished")
+//                case .failure(let failure):
+//                    print("failure : \(failure)")
+//                }
+//            } receiveValue: { response in
+//                print("response : \(response)")
+//            }
+//            .store(in: &subscriptions)
+    }
+// 변환
+/*
+ //
+ //        Task {
+ //            do {
+ ////                let result = try await TodosAPI.fetchTodosWithObservableToAsync()
+ //                let result = try await TodosAPI.fetchTodosWithObservable().toAsync()
+ //                print("result : \(result)")
+ //            } catch {
+ //                print("catched error: \(error)")
+ //            }
+ //        }
+         
+ //        Task {
+ //            do {
+ //                // let result = try await TodosAPI.fetchTodosWithPublisherToAsync(page: 1)
+ //                // async 부분을 extension으로 변경해서 API를 호출한다.
+ //                let result = try await TodosAPI.fetchTodosWithPublisher().toAsync()
+ //                print("result : \(result)")
+ //            } catch {
+ //                print("catched error: \(error)")
+ //            }
+ //        }
+ //
+ //        TodosAPI.fetchTodosClosureToPublisherWithNoError()
+ //            .sink { completion in
+ //                switch completion {
+ //                case .failure(_):
+ //                    print("failure")
+ //                case .finished:
+ //                    print("finished")
+ //                }
+ //            } receiveValue: { response in
+ //                print("response : \(response)")
+ //            }
+ //            .store(in: &subscriptions)
+ //
+ //        TodosAPI.fetchTodosClosureToPublisherWithError(page: 1)
+ //            .sink { completion in
+ //                switch completion {
+ //                case .failure(let failure):
+ //                    print("failure: \(failure)")
+ //                case .finished:
+ //                    print("finished")
+ //                }
+ //            } receiveValue: { response in
+ //                print("response : \(response)")
+ //            }
+ //            .store(in: &subscriptions)
+
+         
+ //        TodosAPI.fetchTodosClosureToObservable(page: 1)
+ //            .subscribe(onNext: { value in
+ //                print("value: \(value)")
+ //            }, onError: { err in
+ //                print("error: \(err)")
+ //            })
+ //            .disposed(by: disposeBag)
+         
+ //        Task {
+ //            let result = await TodosAPI.fetchTodosClosureToAsyncReturnArray(page:1)
+ //            print("result: \(result)")
+             
+ //            do {
+ //                let result = try await TodosAPI.fetchTodosClosureToAsyncWithError(page:1)
+ //                print("result: \(result)")
+ //            } catch {
+ //                self.handleError(error)
+ //            }
+ //        }
+         
+ //        Task {
+ //            let result = await TodosAPI.fetchTodosClosureToAsync(page: 1)
+ //            print("result : \(result)")
+ //        }
+ */
+// async/await
+/*
+//        Task {
+//            let selectedIds : [Int] = [3540, 3521,3526, 3528, 3529, 3531, 3532]
+//            let response = await TodosAPI.deleteSeletedTodosWithAsyncTaskGroupNoError(selectedTodoIds: selectedIds)
+//            print("결과 : \(response)")
+//        }
+        
+//        Task {
+//            do {
+//                let selectedIds : [Int] = [3540, 3521,3526, 3528, 3529, 3531, 3532]
+//                let response = try await TodosAPI.deleteSeletedTodosWithAsyncTaskGroupWithError(selectedTodoIds: selectedIds)
+//                print("결과 : \(response)")
+//            } catch {
+//                self.handleError(error)
+//            }
+//        }
+//
+//        Task {
+//            do {
+//                let response : [Int] = try await TodosAPI.deleteSeletedTodosWithAsyncWithError(selectedTodoIds: [])
+//            } catch {
+//                self.handleError(error)
+//            }
+//        }
+//
+//        Task {
+//            let response : [Int] = try await TodosAPI.deleteSeletedTodosWithAsyncNoError(selectedTodoIds: [])
+//        }
+//
+//        Task {
+//            let response = await TodosAPI.addTodoAndFetchTodosWithAsyncNoErr(title: "새롭게 추가된 할 일 입니다.")
+//            print("response : \(response)")
+//        }
+//
         
 //        Task {
 //            do {
@@ -64,8 +242,7 @@ class TodosVM: ObservableObject {
 //            let response = await TodosAPI.fetchTodosWithAsyncResult()
 //            print("Async Result : \(response)")
 //        }
-    }
-
+*/
 // Combine
 /*
 //        TodosAPI.fetchTodosWithPublisherResult()

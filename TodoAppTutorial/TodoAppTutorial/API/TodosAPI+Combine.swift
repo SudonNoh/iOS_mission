@@ -738,3 +738,59 @@ extension TodosAPI {
         return Publishers.MergeMany(apiCallPublisher).compactMap{ $0 }.eraseToAnyPublisher()
     }
 }
+
+//MARK: - combine -> async
+
+extension TodosAPI {
+    /// 구독을 하고, 받은 이벤트 기반으로 async로 보낸다.
+    /// Combine으로 했을 때는 구독을 하지 않고 데이터 스트림(물줄기)만 변경했었다
+    static func fetchTodosWithPublisherToAsync(page: Int = 1) async throws -> BaseListResponse<Todo> {
+        return try await withCheckedThrowingContinuation({ (continuation : CheckedContinuation<BaseListResponse<Todo>, Error>) in
+            var cancellable : AnyCancellable? = nil
+            // cancellable은 구독을 하기 위해 선언했는데, fetchTodosWithPublisher를 수행할 때 메모리 참조가 일어난다.
+            // 따라서 모든 과정을 끝낸 후에는 메모리 참조를 제거해주어야 한다.
+            
+            // 1. 기존 Publisher 이벤트를 구독
+            cancellable = fetchTodosWithPublisher(page: page)
+            // 2. 들어온 이벤트의 결과에 따라 async 이벤트 처리
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        print("finished")
+                    case .failure(let failure):
+                        print("failure: \(failure)")
+                        continuation.resume(throwing: failure)
+                    }
+                    
+                    cancellable?.cancel()
+                    
+                }, receiveValue: { response in
+                    print("receiveValue : \(response)")
+                    continuation.resume(returning: response)
+                })
+        })
+    }
+}
+
+
+extension AnyPublisher {
+    func toAsync() async throws -> Output {
+        return try await withCheckedThrowingContinuation({ (continuation : CheckedContinuation<Output, Error>) in
+            var cancellable : AnyCancellable? = nil
+            
+            cancellable = first()
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let failure):
+                        continuation.resume(throwing: failure)
+                    }
+                    cancellable?.cancel()
+                }, receiveValue: { response in
+                    continuation.resume(returning: response)
+                })
+            
+        })
+    }
+}

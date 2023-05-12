@@ -26,6 +26,7 @@
 		EA631A812A011622001C2755 /* TodosAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA631A802A011622001C2755 /* TodosAPI.swift */; };
 		EA631A832A0118C3001C2755 /* TodosVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA631A822A0118C3001C2755 /* TodosVM.swift */; };
 		EA631A862A011ACD001C2755 /* TodosResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA631A852A011ACD001C2755 /* TodosResponse.swift */; };
+		EA6FF0AA2A0E43CC005142F5 /* RxCombine in Frameworks */ = {isa = PBXBuildFile; productRef = EA6FF0A92A0E43CC005142F5 /* RxCombine */; };
 		EA9A62582A01DCE000200B7A /* MultipartForm in Frameworks */ = {isa = PBXBuildFile; productRef = EA9A62572A01DCE000200B7A /* MultipartForm */; };
 		EA9A625B2A01E54700200B7A /* URL+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9A625A2A01E54700200B7A /* URL+Ext.swift */; };
 		EA9A625D2A01F35E00200B7A /* URLRequest+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9A625C2A01F35E00200B7A /* URLRequest+Ext.swift */; };
@@ -71,6 +72,7 @@
 				EA9A62662A025AA400200B7A /* RxSwift in Frameworks */,
 				EA4BC2992A0A7A5E005721F1 /* CombineCocoa in Frameworks */,
 				EA417BDE2A0CD20E00FDAD5B /* CombineExt in Frameworks */,
+				EA6FF0AA2A0E43CC005142F5 /* RxCombine in Frameworks */,
 				EA9A62582A01DCE000200B7A /* MultipartForm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -201,6 +203,7 @@
 				EA9A62652A025AA400200B7A /* RxSwift */,
 				EA4BC2982A0A7A5E005721F1 /* CombineCocoa */,
 				EA417BDD2A0CD20E00FDAD5B /* CombineExt */,
+				EA6FF0A92A0E43CC005142F5 /* RxCombine */,
 			);
 			productName = TodoAppTutorial;
 			productReference = EA631A592A00EB32001C2755 /* TodoAppTutorial.app */;
@@ -235,6 +238,7 @@
 				EA9A62602A025AA400200B7A /* XCRemoteSwiftPackageReference "RxSwift" */,
 				EA4BC2972A0A7A5E005721F1 /* XCRemoteSwiftPackageReference "CombineCocoa" */,
 				EA417BDC2A0CD20E00FDAD5B /* XCRemoteSwiftPackageReference "CombineExt" */,
+				EA6FF0A82A0E43CC005142F5 /* XCRemoteSwiftPackageReference "RxCombine" */,
 			);
 			productRefGroup = EA631A5A2A00EB32001C2755 /* Products */;
 			projectDirPath = "";
@@ -499,6 +503,14 @@
 				minimumVersion = 0.4.1;
 			};
 		};
+		EA6FF0A82A0E43CC005142F5 /* XCRemoteSwiftPackageReference "RxCombine" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CombineCommunity/RxCombine.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		EA9A62562A01DCE000200B7A /* XCRemoteSwiftPackageReference "MultipartForm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davbeck/MultipartForm";
@@ -527,6 +539,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EA4BC2972A0A7A5E005721F1 /* XCRemoteSwiftPackageReference "CombineCocoa" */;
 			productName = CombineCocoa;
+		};
+		EA6FF0A92A0E43CC005142F5 /* RxCombine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA6FF0A82A0E43CC005142F5 /* XCRemoteSwiftPackageReference "RxCombine" */;
+			productName = RxCombine;
 		};
 		EA9A62572A01DCE000200B7A /* MultipartForm */ = {
 			isa = XCSwiftPackageProductDependency;

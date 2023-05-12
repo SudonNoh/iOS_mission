@@ -621,3 +621,48 @@ extension TodosAPI {
             .compactMap { $0 }
     }
 }
+
+extension TodosAPI {
+    static func fetchTodosWithObservableToAsync(page: Int = 1) async throws -> BaseListResponse<Todo> {
+        return try await withCheckedThrowingContinuation({ (continuation : CheckedContinuation<BaseListResponse<Todo>, Error>) in
+            var disposable : Disposable? = nil
+            
+            disposable = fetchTodosWithObservable(page: page)
+                .subscribe(onNext: { response in
+                    print("response: \(response)")
+                    continuation.resume(returning: response)
+                }, onError: { err in
+                    print("onErr: \(err)")
+                    continuation.resume(throwing: err)
+                }, onCompleted: {
+                    // onCompleted는 스트림이 모두 끊겼을 때 동작한다.
+                    print("onCompleted")
+                    disposable?.dispose()
+                }, onDisposed: {
+                    // dispose가 되었을 때, 출력한다.
+                    print("onDisposed")
+                })
+        })
+    }
+}
+
+extension ObservableType {
+    
+    func toAsync() async throws -> Element {
+        
+        return try await withCheckedThrowingContinuation({ (continuation : CheckedContinuation<Element, Error>) in
+            
+            var disposable : Disposable? = nil
+            
+            disposable = single()
+                .subscribe(onNext: { response in
+                    continuation.resume(returning: response)
+                }, onError: { err in
+                    continuation.resume(throwing: err)
+                }, onCompleted: {
+                    disposable?.dispose()
+                }, onDisposed: {
+                })
+        })
+    }
+}

@@ -552,6 +552,10 @@ extension TodosAPI {
             
             return try JSONDecoder().decode(BaseResponse<Todo>.self, from: data)
         } catch {
+            if let apiError = error as? ApiError {
+                throw apiError
+            }
+            
             if let apiError = error as? URLError {
                 throw ApiError.badStatus(code: apiError.errorCode)
             }
@@ -612,73 +616,212 @@ extension TodosAPI {
     }
     
     
-    /// 클로저 기반 선택된 할 일들 삭제하기
+    /// 선택된 할 일들 삭제하기
     /// 동시에 처리
     /// - Parameters:
     ///   - seletedTodoIds: 선택된 할 일 아이디
     ///   - completion: 실제 삭제가 완료된 아이디들
-//    static func deleteSeletedTodosWithAsyncMerge(seletedTodoIds: [Int]) -> AnyPublisher<Int, Never> {
-//        // 매개변수 배열 -> Observable 스트림 배열로 만든다.
-//        // 배열로 단일 api 호출
-//        let apiCallPublishers = seletedTodoIds.map { id -> AnyPublisher<Int?, Never> in
-//            return self.deleteATodoWithAsync(id: id)
-//                .map{ $0.data?.id } // Int?
-//                .replaceError(with: nil)
-//                .eraseToAnyPublisher()
-//        }
-//
-//        return Publishers.MergeMany(apiCallPublishers).compactMap { $0 }.eraseToAnyPublisher()
-//    }
-//
-//    static func deleteSeletedTodosWithAsyncMergeWithError(seletedTodoIds: [Int]) -> AnyPublisher<Int, ApiError> {
-//        // 매개변수 배열 -> Observable 스트림 배열로 만든다.
-//        // 배열로 단일 api 호출
-//        let apiCallPublishers = seletedTodoIds.map { id -> AnyPublisher<Int?, ApiError> in
-//            return self.deleteATodoWithAsync(id: id)
-//                .map{ $0.data?.id } // Int?
-//                .eraseToAnyPublisher()
-//        }
-//
-//        return Publishers.MergeMany(apiCallPublishers).compactMap { $0 }.eraseToAnyPublisher()
-//    }
-//
-//    static func deleteSeletedTodosWithAsyncZip(seletedTodoIds: [Int]) -> AnyPublisher<[Int], Never> {
-//        // 매개변수 배열 -> Observable 스트림 배열로 만든다.
-//        // 배열로 단일 api 호출
-//        let apiCallPublishers : [AnyPublisher<Int?, Never>] = seletedTodoIds.map { id -> AnyPublisher<Int?, Never> in
-//            return self.deleteATodoWithAsync(id: id)
-//                .map{ $0.data?.id } // Int?
-//                .replaceError(with: nil)
-//                .eraseToAnyPublisher()
-//        }
-//
-//        return apiCallPublishers.zip().map { $0.compactMap{$0} }.eraseToAnyPublisher()
-//    }
+    /// 위의 두 방법은 async await 을 이용해 첫 번째, 두 번째, 세 번째 결과를 기다렸다가 반환하는 방식이다.
+    /// 이 경우 배열로 받은 선택된 아이디들을 처리하기가 곤란해진다.
+    /// 그런 경우에는 두 번째 방법인 TaskGroup을 이용해서 처리해야 한다.
+    static func deleteSeletedTodosWithAsyncNoError(selectedTodoIds: [Int]) async -> [Int] {
+        async let firstResult = self.deleteATodoWithAsync(id: 1641)
+        async let secondResult = self.deleteATodoWithAsync(id: 1641)
+        async let thirdResult = self.deleteATodoWithAsync(id: 1641)
+        
+        do {
+            let results : [Int?] = try await [firstResult.data?.id, secondResult.data?.id, thirdResult.data?.id]
+            return results.compactMap { $0 }
+        } catch {
+            return []
+        }
+    }
     
-    /// 클로저 기반 선택된 할 일들 가져오기
+    static func deleteSeletedTodosWithAsyncWithError(selectedTodoIds: [Int]) async throws-> [Int] {
+        async let firstResult = self.deleteATodoWithAsync(id: 1641)
+        async let secondResult = self.deleteATodoWithAsync(id: 1641)
+        async let thirdResult = self.deleteATodoWithAsync(id: 1641)
+        
+        let results : [Int?] = try await [firstResult.data?.id, secondResult.data?.id, thirdResult.data?.id]
+        return results.compactMap { $0 }
+    }
+    
+    static func deleteSeletedTodosWithAsyncTaskGroupWithError(selectedTodoIds: [Int]) async throws-> [Int] {
+        
+        // Sendable.Protocol : TaskGorup을 하나하나 돌릴 때 반환하는 자료형
+        // 아래 전체 작업을 기다리고, 에러를 던지기 때문에 try await을 해줘야 한다.
+        try await withThrowingTaskGroup(of: Int?.self) { (group : inout ThrowingTaskGroup<Int?, Error>) in
+            let todoIds = selectedTodoIds.map { $0 }
+            
+            // 각각 자식 async를 테스크를 그룹에 넣기
+            for aTodoId in todoIds {
+                group.addTask(operation: {
+                    // 단일 API 전송
+                    // 여기서 반환해야 하는 부분은 TaskGroup의 of , 즉 Sendable.Protocol 에서 지정한 자료형으로 반환해야 한다.
+                    let childTaskResult = try await self.deleteATodoWithAsync(id: aTodoId)
+                    return childTaskResult.data?.id
+                })
+            }
+            
+            var deleteTodoIds : [Int] = []
+            
+            for try await singleValue in group {
+                if let value = singleValue {
+                    deleteTodoIds.append(value)
+                }
+            }
+            
+            return deleteTodoIds
+        }
+    }
+    
+    static func deleteSeletedTodosWithAsyncTaskGroupNoError(selectedTodoIds: [Int]) async -> [Int] {
+        
+        // Sendable.Protocol : TaskGorup을 하나하나 돌릴 때 반환하는 자료형
+        // 아래 전체 작업을 기다리고, 에러를 던지기 때문에 try await을 해줘야 한다.
+        // 에러를 던지지 않는 TaskGroup
+        await withTaskGroup(of: Int?.self) { (group : inout TaskGroup<Int?>) in
+            let todoIds = selectedTodoIds.map { $0 }
+            
+            // 각각 자식 async를 테스크를 그룹에 넣기
+            for aTodoId in todoIds {
+                group.addTask(operation: {
+                    do {
+                        // 단일 API 전송
+                        // 여기서 반환해야 하는 부분은 TaskGroup의 of , 즉 Sendable.Protocol 에서 지정한 자료형으로 반환해야 한다.
+                        let childTaskResult = try await self.deleteATodoWithAsync(id: aTodoId)
+                        return childTaskResult.data?.id
+                    } catch {
+                        return nil
+                    }
+                })
+            }
+            
+            var deleteTodoIds : [Int] = []
+            // 위에서 이미 do catch 구문으로 try를 처리했기 때문에 아래에서는 try를 뺄 수 있다.
+            for await singleValue in group {
+                if let value = singleValue {
+                    deleteTodoIds.append(value)
+                }
+            }
+            
+            return deleteTodoIds
+        }
+    }
+    
+    
+    /// 선택된 할 일들 가져오기
     /// 동시에 처리
     /// - Parameters:
     ///   - seletedTodoIds: 선택된 할 일 아이디
     ///   - completion: 응답결과
-//    static func fetchSeletedTodosWithAsyncZip( seletedTodoIds: [Int] ) -> AnyPublisher<[Todo], Never> {
-//        // AnyPublisher<BaseResponse<Todo>, ApiError>
-//        let apiCallPublisher = seletedTodoIds.map { id -> AnyPublisher<Todo?, Never> in
-//            return self.fetchATodoWithAsync(id: id)
-//                .map { $0.data } // Todo?
-//                .replaceError(with: nil)
-//                .eraseToAnyPublisher()
-//        }
-//        return apiCallPublisher.zip().map{ $0.compactMap { $0 }}.eraseToAnyPublisher()
-//    }
-//
-//    static func fetchSeletedTodosWithAsyncMerge( seletedTodoIds: [Int] ) -> AnyPublisher<Todo, Never> {
-//        // AnyPublisher<BaseResponse<Todo>, ApiError>
-//        let apiCallPublisher = seletedTodoIds.map { id -> AnyPublisher<Todo?, Never> in
-//            return self.fetchATodoWithAsync(id: id)
-//                .map { $0.data } // Todo?
-//                .replaceError(with: nil)
-//                .eraseToAnyPublisher()
-//        }
-//        return Publishers.MergeMany(apiCallPublisher).compactMap{ $0 }.eraseToAnyPublisher()
-//    }
+    static func fetchSelectedTodosAsyncNoError(selectedTodoIds: [Int]) async -> [Todo] {
+        
+        await withTaskGroup(of: Todo?.self) { (group : inout TaskGroup<Todo?>) in
+            let todoIds = selectedTodoIds.map { $0 }
+            
+            // 각각 자식 async를 테스크를 그룹에 넣기
+            for aTodoId in todoIds {
+                group.addTask(operation: {
+                    do {
+                        // 단일 API 전송
+                        // 여기서 반환해야 하는 부분은 TaskGroup의 of , 즉 Sendable.Protocol 에서 지정한 자료형으로 반환해야 한다.
+                        let childTaskResult = try await self.fetchATodoWithAsync(id: aTodoId)
+                        return childTaskResult.data
+                    } catch {
+                        return nil
+                    }
+                })
+            }
+            
+            var fetchedTodos : [Todo] = []
+            // 위에서 이미 do catch 구문으로 try를 처리했기 때문에 아래에서는 try를 뺄 수 있다.
+            for await singleValue in group {
+                if let value = singleValue {
+                    fetchedTodos.append(value)
+                }
+            }
+            
+            return fetchedTodos
+        }
+    }
+
+    static func fetchSelectedTodosAsyncWithError(selectedTodoIds: [Int]) async throws -> [Todo] {
+        
+        try await withThrowingTaskGroup(of: Todo?.self, body: { (group : inout ThrowingTaskGroup<Todo?, Error>) in
+            for aTodoId in selectedTodoIds {
+                group.addTask {
+                    let childTaskResult = try await self.fetchATodoWithAsync(id: aTodoId)
+                    return childTaskResult.data
+                }
+            }
+            
+            var fetchedTodos : [Todo] = []
+            
+            for try await singleValue in group {
+                if let value = singleValue {
+                    fetchedTodos.append(value)
+                }
+            }
+            return fetchedTodos
+        })
+    }
+}
+
+//MARK: - Async -> Combine
+extension TodosAPI {
+    
+    static func fetchTodosAsyncToPublisher(page: Int = 1) -> AnyPublisher<BaseListResponse<Todo>, Error> {
+        
+        return Future { (promise: @escaping (Result<BaseListResponse<Todo>, Error>) -> Void) in
+            Task {
+                do {
+                    let asyncResult = try await fetchTodosWithAsync(page: page)
+                    
+                    promise(.success(asyncResult))
+                } catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+    
+    static func genericAsyncToPublisher<T>(asyncWork: @escaping () async throws -> T) -> AnyPublisher<T, Error> {
+        
+        return Future { (promise: @escaping (Result<T, Error>) -> Void) in
+            Task {
+                do {
+                    let asyncResult = try await asyncWork()
+                    
+                    promise(.success(asyncResult))
+                } catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+}
+
+
+extension Publisher {
+    
+    /// asyncWork 중간에 다른 연산을 처리하기 위해 만든다.
+    /// Output : Publisher 에서 나가는 데이터
+    func mapAsyncr<T>(asyncWork: @escaping (Output) async throws -> T) -> Publishers.FlatMap<Future<T, Error>, Publishers.SetFailureType<Self, Error>> {
+        return flatMap { output in
+            return Future { (promise: @escaping (Result<T, Error>) -> Void) in
+                Task {
+                    do {
+                        let asyncResult = try await asyncWork(output)
+                        
+                        promise(.success(asyncResult))
+                    } catch {
+                        promise(.failure(error))
+                    }
+                }
+            }
+        }
+    }
 }
