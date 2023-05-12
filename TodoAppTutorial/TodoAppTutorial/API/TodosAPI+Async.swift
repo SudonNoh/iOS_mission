@@ -2,7 +2,7 @@ import Foundation
 import MultipartForm
 import Combine
 import CombineExt
-
+import RxSwift
 
 extension TodosAPI {
     
@@ -804,7 +804,6 @@ extension TodosAPI {
     }
 }
 
-
 extension Publisher {
     
     /// asyncWork 중간에 다른 연산을 처리하기 위해 만든다.
@@ -821,6 +820,65 @@ extension Publisher {
                         promise(.failure(error))
                     }
                 }
+            }
+        }
+    }
+}
+
+
+//MARK: - Async -> Observable
+extension TodosAPI {
+    
+    static func fetchTodosAsyncToObservable(page: Int = 1) -> Observable<BaseListResponse<Todo>> {
+        return Observable.create {(observer : AnyObserver<BaseListResponse<Todo>>) in
+            Task {
+                do {
+                    let asyncResult = try await fetchTodosWithAsync(page: page)
+                    
+                    observer.onNext(asyncResult)
+                    observer.onCompleted()
+                } catch {
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    static func genericAsyncToObservable<T>(asyncWork: @escaping () async throws -> T) -> Observable<T>{
+        return Observable.create {(observer : AnyObserver<T>) in
+            Task {
+                do {
+                    let asyncResult = try await asyncWork()
+                    
+                    observer.onNext(asyncResult)
+                    observer.onCompleted()
+                } catch {
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
+    }
+}
+
+extension ObservableType {
+    
+    func mapAsync<T>(asyncWork: @escaping (Element) async throws -> T) -> Observable<T>{
+        
+        return flatMap { element in
+            return Observable.create {(observer : AnyObserver<T>) in
+                Task {
+                    do {
+                        let asyncResult = try await asyncWork(element)
+                        
+                        observer.onNext(asyncResult)
+                        observer.onCompleted()
+                    } catch {
+                        observer.onError(error)
+                    }
+                }
+                return Disposables.create()
             }
         }
     }

@@ -60,7 +60,7 @@ extension TodosAPI {
             })
     }
     
-    
+    /*
     // 반환 방식을 변경
     // observable error를 통해 error를 보낸다.
     static func fetchTodosWithObservable(
@@ -118,7 +118,62 @@ extension TodosAPI {
             }
         )
     }
-    
+    */
+    // Observable 반환 방식 변경
+    static func fetchTodosWithObservable(
+        page: Int = 1) ->
+        Observable<BaseListResponse<Todo>>
+    {
+        // 1. urlRequest를 만든다.
+        let urlString = baseURL + "/todos" + "?page=\(page)"
+        
+        guard let url = URL(string: urlString) else {
+            // 에러를 던진다.
+            return Observable.error(ApiError.notAllowedUrl)
+        }
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+        urlRequest.addValue("application/json", forHTTPHeaderField: "accept")
+        
+        return URLSession.shared.rx.response(request: urlRequest)
+            .debug("Rx Retry")
+            .map({ (urlResponse: HTTPURLResponse, data: Data) -> Data in
+                // rx Observable 스코프 내부
+                print("data: \(data)")
+                print("urlResponse: \(urlResponse)")
+                
+                switch urlResponse.statusCode {
+                case 401:
+                    // Error가 나면 어차피 옵저버블 스코프를 탈출하기 때문에 return할 때 throw 해준다.
+                    throw ApiError.unauthorized
+                default: print("default")
+                }
+                
+                if  !(200...299).contains(urlResponse.statusCode) {
+                    throw ApiError.badStatus(code: urlResponse.statusCode)
+                }
+                return data
+            })
+            .decode(type: BaseListResponse<Todo>.self, decoder: JSONDecoder())
+            .map { response in
+                guard let todos = response.data,
+                      !todos.isEmpty else {
+                    throw ApiError.noContent
+                }
+                return response
+            }
+            .catch { err in
+                if let error = err as? ApiError {
+                    throw error
+                }
+                if let _ = err as? DecodingError {
+                    throw ApiError.decodingError
+                }
+                
+                throw ApiError.unknown(err)
+            }
+    }
     
     /// 특정 할 일 목록 가져오기
     static func fetchATodoWithObservable(
@@ -664,5 +719,62 @@ extension ObservableType {
                 }, onDisposed: {
                 })
         })
+    }
+    
+    // retry with DelayAndCondition
+    // 횟수 딜레이
+    func retryWithDelayAndCondition(
+        retryCount: Int = 1,
+        delay : Int = 1,
+        when : ((Error) -> Bool)? = nil
+    ) -> Observable<Element> {
+        var requestCount: Int = 0
+        
+        return self.retry(when: {(observableErr: Observable<TodosAPI.ApiError>) in
+            observableErr
+                .do(onNext: { err in
+                    print("observableErr - err : \(err) // requerstCount : \(requestCount)")
+                })
+                .flatMap { err in
+                    
+                    requestCount += 1
+                    
+                    if !(when?(err) ?? true) {
+                        throw err
+                    }
+                    
+                    return Observable<Void>.just(()).delay(.seconds(delay), scheduler: MainScheduler.instance)
+                }
+                .take(retryCount)
+        })
+    }
+    
+    // retry with DelayAndCondition
+    // 횟수 딜레이
+    func retryWithDelayAndConditionCatch(
+        retryCount: Int = 1,
+        delay : Int = 1,
+        when : ((Error) -> Bool)? = nil
+    ) -> Observable<Element> {
+        
+        var requestCount: Int = 0
+        return self.catch { err -> Observable<Element> in
+            
+            // when으로 들어온 조건이 참이면 아래 retry 구문을 타고,
+            // when으로 들어온 조건이 거짓이면 err를 던진다.
+            if !(when?(err) ?? true) {
+                throw err
+            }
+            
+            return Observable<Void>
+                .just(())
+                .delay(.seconds(delay), scheduler: MainScheduler.instance)
+                .flatMap { _ in
+                    requestCount += 1
+                    print("equerstCount : \(requestCount)")
+                    return self
+                }
+                .retry(retryCount)
+        }
     }
 }

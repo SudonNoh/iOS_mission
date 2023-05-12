@@ -19,21 +19,132 @@ class TodosVM: ObservableObject {
     init() {
         print(#fileID, #function, #line, "- ")
         
-        Just(1)
-            .mapAsyncr { value in
-                try await TodosAPI.fetchTodosWithAsync(page:value)
-            }
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("finished")
-                case .failure(let failure):
-                    print("failure : \(failure)")
-                }
-            } receiveValue: { response in
-                print("response : \(response)")
-            }
-            .store(in: &subscriptions)
+        var requestCount: Int = 0
+        let retryCount: Int = 3
+        
+        TodosAPI.fetchTodosWithObservable(page: 999)
+            .retryWithDelayAndCondition(
+                retryCount: 3,
+                delay: 2,
+                when: { err in
+                    if case TodosAPI.ApiError.unauthorized = err {
+                        return true
+                    }
+                    
+                    return false
+                })
+                .subscribe(onNext: {
+                    print("onNext : \($0)")
+                }, onError: {
+                    print("onError : \($0)")
+                }, onCompleted: {
+                    print("onComplete")
+                }, onDisposed: {
+                    print("onDisposed")
+                })
+                .disposed(by: disposeBag)
+        
+//        TodosAPI.fetchTodosWithObservable(page: 999)
+//            // .retry(3) // delay X
+//            .retry(when: { (observableErr : Observable<TodosAPI.ApiError>) in
+//                observableErr
+//                    .do(onNext: { err in
+//                        print("observableErr - err : \(err) // requerstCount : \(requestCount)")
+//                    })
+//                    .flatMap { err in
+//                        requestCount += 1
+//                        guard requestCount < retryCount else {
+//                            // retry(when:)을 종료하려면 여기서 에러를 던져주어야 한다.
+//                            throw err
+//                        }
+//
+//                        if case TodosAPI.ApiError.noContent = err {
+//                            return Observable<Void>.just(()).delay(.seconds(3), scheduler: MainScheduler.instance)
+//                        }
+//
+//                        // 위와 같은 로직
+////                        if let apiErr = err as? TodosAPI.ApiError {
+////                            switch apiErr {
+////                            case .noContent:
+////                                return Observable<Void>.just(()).delay(.seconds(3), scheduler: MainScheduler.instance)
+////                            default: throw err
+////                            }
+////                        }
+//
+//                        throw err
+//                        // 무한 루프
+//                        // return Observable<Void>.just(())
+//                    }
+// //         .take(3)
+//            })
+//            .subscribe(onNext: {
+//                print("onNext : \($0)")
+//            }, onError: {
+//                print("onError : \($0)")
+//            }, onCompleted: {
+//                print("onComplete")
+//            }, onDisposed: {
+//                print("onDisposed")
+//            })
+//            .disposed(by: disposeBag)
+        
+//        Observable
+//            .just(99999)
+//            .mapAsync { value in
+//                try await TodosAPI.fetchTodosWithAsync(page: value)
+//            }
+//            .subscribe(onNext: {
+//                print("onNext : \($0)")
+//            }, onError: {
+//                print("onError : \($0)")
+//            }, onCompleted: {
+//                print("onComplete")
+//            }, onDisposed: {
+//                print("onDisposed")
+//            })
+//            .disposed(by: disposeBag)
+        
+//        TodosAPI.genericAsyncToObservable(asyncWork: {
+//            try await TodosAPI.fetchTodosWithAsync(page: 1)
+//        })
+//            .subscribe(onNext: {
+//                print("onNext : \($0)")
+//            }, onError: {
+//                print("onError : \($0)")
+//            }, onCompleted: {
+//                print("onComplete")
+//            }, onDisposed: {
+//                print("onDisposed")
+//            })
+//            .disposed(by: disposeBag)
+        
+//        TodosAPI.fetchTodosAsyncToObservable()
+//            .subscribe(onNext: {
+//                print("onNext : \($0)")
+//            }, onError: {
+//                print("onError : \($0)")
+//            }, onCompleted: {
+//                print("onComplete")
+//            }, onDisposed: {
+//                print("onDisposed")
+//            })
+//            .disposed(by: disposeBag)
+        
+//        Just(1)
+//            .mapAsyncr { value in
+//                try await TodosAPI.fetchTodosWithAsync(page:value)
+//            }
+//            .sink { completion in
+//                switch completion {
+//                case .finished:
+//                    print("finished")
+//                case .failure(let failure):
+//                    print("failure : \(failure)")
+//                }
+//            } receiveValue: { response in
+//                print("response : \(response)")
+//            }
+//            .store(in: &subscriptions)
         
 //        TodosAPI.genericAsyncToPublisher(asyncWork: {
 //            try await TodosAPI.fetchTodosWithAsync()
