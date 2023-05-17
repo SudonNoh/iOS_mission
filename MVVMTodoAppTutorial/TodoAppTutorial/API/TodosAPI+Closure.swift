@@ -271,6 +271,11 @@ extension TodosAPI {
             switch httpResponse.statusCode {
             case 401:
                 return completion(.failure(ApiError.unauthorized))
+            case 422:
+                if let data = data,
+                   let errResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data) {
+                    return completion(.failure(ApiError.errResponseFromServer(errResponse)))
+                }
             case 204:
                 return completion(.failure(ApiError.noContent))
             default: print("default")
@@ -725,6 +730,28 @@ extension TodosAPI {
             
             completion(.success(fetchedTodos))
         }
+    }
+    
+    
+    static func editATodoAndFetchATodo(id: Int,
+                                       title:String,
+                                       isDone:Bool=false,
+                                       completion: @escaping (Result<BaseResponse<Todo>, ApiError>)-> Void) {
+        self.editATodo(id: id, title: title, completion: { result in
+            switch result {
+            case .success(_):
+                self.fetchATodo(id: id, completion: {
+                    switch $0 {
+                    case .success(let data):
+                        completion(.success(data))
+                    case .failure(let failure):
+                        completion(.failure(failure))
+                    }
+                })
+            case .failure(let failure):
+                completion(.failure(failure))
+            }
+        })
     }
 }
 
