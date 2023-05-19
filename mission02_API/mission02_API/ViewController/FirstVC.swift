@@ -1,16 +1,11 @@
-//
-//  HomeVC.swift
-//  WhatTodoApp
-//
-//  Created by Sudon Noh on 2023/05/18.
-//
-
 import UIKit
 import SnapKit
 import Then
 
 
-class HomeVC: CustomVC {
+class FirstVC: CustomVC {
+    
+    var dataSource: [DummyData] = DummyData.getDummies()
     
     lazy var searchBar : UISearchBar = UISearchBar().then {
         $0.placeholder = "검색어를 입력해주세요."
@@ -27,22 +22,17 @@ class HomeVC: CustomVC {
         $0.backgroundColor = .bgColor
     }
     
-    var dataSource: [DummyData] = DummyData.getDummies()
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        self.todoTableView.register(TodoCell.self, forCellReuseIdentifier: "TodoCell")
+        self.todoTableView.register(MocksCell.self, forCellReuseIdentifier: "MocksCell")
         self.todoTableView.dataSource = self
         self.todoTableView.delegate = self
-        
-        TodoVM.init()
     }
 }
 
 // UI Setup
-extension HomeVC {
+extension FirstVC {
     
     func setup() {
         self.view.backgroundColor = .bgColor
@@ -57,14 +47,14 @@ extension HomeVC {
     }
 }
 
-extension HomeVC: UITableViewDataSource {
+extension FirstVC: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "TodoCell", for: indexPath) as? TodoCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MocksCell", for: indexPath) as? MocksCell else {
             print(#fileID, #function, #line, "- 오류로 진입")
             return UITableViewCell()
         }
@@ -84,7 +74,7 @@ extension HomeVC: UITableViewDataSource {
     }
 }
 
-extension HomeVC: UITableViewDelegate {
+extension FirstVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
@@ -98,6 +88,7 @@ extension HomeVC: UITableViewDelegate {
         let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { (action, view, completionHandler) in
             self.dataSource.remove(at: indexPath.row)
             self.todoTableView.deleteRows(at: [indexPath], with: .automatic)
+            print(#fileID, #function, #line, "- \(indexPath.row + 1) 번째 행이 삭제됐습니다.")
             completionHandler(true)
         }
         deleteAction.backgroundColor = .red
@@ -105,13 +96,3 @@ extension HomeVC: UITableViewDelegate {
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 }
-
-#if DEBUG
-import SwiftUI
-
-struct HomeVCPreView: PreviewProvider {
-    static var previews: some View {
-        HomeVC().toPreview().ignoresSafeArea()
-    }
-}
-#endif

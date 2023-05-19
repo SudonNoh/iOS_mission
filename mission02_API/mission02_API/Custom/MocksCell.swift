@@ -1,16 +1,9 @@
-//
-//  Cell.swift
-//  WhatTodoApp
-//
-//  Created by Sudon Noh on 2023/05/18.
-//
-
 import Foundation
 import UIKit
 import SnapKit
 import Then
 
-class TodoCell: UITableViewCell {
+class MocksCell: UITableViewCell {
     
     lazy var titleLabel: UILabel = UILabel().then {
         $0.text = "해야 할 일들을 정리하는 곳 입니다."
@@ -70,21 +63,5 @@ class TodoCell: UITableViewCell {
             $0.horizontalEdges.equalToSuperview().inset(5)
             $0.bottom.equalToSuperview().inset(10)
         }
-        
-        dateStackView.setContentCompressionResistancePriority(.required, for: .vertical)
     }
 }
-
-
-#if DEBUG
-import SwiftUI
-
-struct TodoCellPreView: PreviewProvider {
-    static var previews: some View {
-        TodoCell()
-            .toPreview()
-            .previewLayout(.sizeThatFits)
-            .frame(width: 350, height: 120)
-    }
-}
-#endif
