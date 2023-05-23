@@ -21,6 +21,8 @@ class TodosVM_Rx {
     // 가공된 최종 데이터
     var todos : BehaviorRelay<[Todo]> = BehaviorRelay<[Todo]>(value: [])
     
+    
+    
     // 선택된 할일 목록
     var selectedTodoIds: Set<Int> = [] {
         didSet {

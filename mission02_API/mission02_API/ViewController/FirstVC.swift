@@ -1,11 +1,16 @@
 import UIKit
 import SnapKit
 import Then
+import RxSwift
+import RxRelay
+import RxCocoa
 
 
 class FirstVC: CustomVC {
     
-    var dataSource: [DummyData] = DummyData.getDummies()
+    var disposeBag = DisposeBag()
+    
+    var mocksVM: MocksVM = MocksVM()
     
     lazy var searchBar : UISearchBar = UISearchBar().then {
         $0.placeholder = "검색어를 입력해주세요."
@@ -18,62 +23,98 @@ class FirstVC: CustomVC {
         $0.layer.shadowOpacity = 3.0
     }
     
-    lazy var todoTableView : UITableView = UITableView().then {
+    lazy var mockTableView : UITableView = UITableView().then {
         $0.backgroundColor = .bgColor
     }
     
+    //MARK: - FirstView viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        self.todoTableView.register(MocksCell.self, forCellReuseIdentifier: "MocksCell")
-        self.todoTableView.dataSource = self
-        self.todoTableView.delegate = self
+        self.mockTableView.register(MockCell.self, forCellReuseIdentifier: "MockCell")
+        self.mockTableView.dataSource = self
+        self.mockTableView.delegate = self
+        
+        self.mocksVM
+            .mocks
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { VC, updateData in
+                VC.mockTableView.reloadData()
+            }).disposed(by: disposeBag)
+        
+        // Error 처리
+        self.mocksVM
+            .errorMsg
+            .skip(1)
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { VC, msg in
+                VC.showErrorAlert(errMsg: msg)
+            }).disposed(by: disposeBag)
     }
 }
 
-// UI Setup
+//MARK: - Alert
+extension FirstVC {
+    @objc fileprivate func showErrorAlert(errMsg: String){
+        let alert = UIAlertController(title: "안내", message: errMsg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "닫기", style: .cancel))
+        self.present(alert, animated: true, completion: nil)
+    }
+}
+
+//MARK: - UI Setup
 extension FirstVC {
     
     func setup() {
         self.view.backgroundColor = .bgColor
         self.navigationItem.titleView = searchBar
         
-        self.view.addSubview(todoTableView)
+        self.view.addSubview(mockTableView)
         
-        todoTableView.snp.makeConstraints {
+        mockTableView.snp.makeConstraints {
             $0.verticalEdges.equalTo(self.view.safeAreaLayoutGuide.snp.verticalEdges).inset(20)
             $0.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide.snp.horizontalEdges).inset(15)
         }
     }
 }
 
+//MARK: - TableView DataSource
 extension FirstVC: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource.count
+        return self.mocksVM.mocks.value.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MocksCell", for: indexPath) as? MocksCell else {
-            print(#fileID, #function, #line, "- 오류로 진입")
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MockCell", for: indexPath) as? MockCell else {
             return UITableViewCell()
         }
         
-        let cellData = dataSource[indexPath.row]
+        let cellData = self.mocksVM.mocks.value[indexPath.row]
         
-        cell.titleLabel.numberOfLines = 0
-        cell.titleLabel.text = cellData.title
-        cell.updatedDateLabel.text = "Update : " + cellData.updateDate
-        cell.createdDateLabel.text = "Create : " + cellData.createDate
+        guard let id = cellData.id,
+              let email = cellData.email,
+              let avatar = cellData.avatar,
+              let title = cellData.title,
+              let content = cellData.content else { return UITableViewCell() }
         
+        cell.idLabel.text = "\(id)"
+        cell.emailLabel.text = email
+        cell.avatarLabel.text = avatar
+        cell.titleLabel.text = title
+        cell.contentLabel.text = content
+                
         cell.layer.borderWidth = 1
         cell.layer.borderColor = UIColor.textPoint?.cgColor
         cell.layer.cornerRadius = 4
-        
+
         return cell
     }
 }
 
+//MARK: - TableView Delegate
 extension FirstVC: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -84,15 +125,15 @@ extension FirstVC: UITableViewDelegate {
         print(#fileID, #function, #line, "- \(indexPath.row + 1) 번째 행이 클릭되었습니다. !")
     }
     
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { (action, view, completionHandler) in
-            self.dataSource.remove(at: indexPath.row)
-            self.todoTableView.deleteRows(at: [indexPath], with: .automatic)
-            print(#fileID, #function, #line, "- \(indexPath.row + 1) 번째 행이 삭제됐습니다.")
-            completionHandler(true)
-        }
-        deleteAction.backgroundColor = .red
-        
-        return UISwipeActionsConfiguration(actions: [deleteAction])
-    }
+//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//        let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { (action, view, completionHandler) in
+//            self.dataSource.remove(at: indexPath.row)
+//            self.todoTableView.deleteRows(at: [indexPath], with: .automatic)
+//            print(#fileID, #function, #line, "- \(indexPath.row + 1) 번째 행이 삭제됐습니다.")
+//            completionHandler(true)
+//        }
+//        deleteAction.backgroundColor = .red
+//
+//        return UISwipeActionsConfiguration(actions: [deleteAction])
+//    }
 }
