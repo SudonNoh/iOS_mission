@@ -88,7 +88,7 @@ class MockCell: UITableViewCell {
         $0.textColor = .textColor
         $0.lineBreakMode = .byCharWrapping
     }
-    // contentBoxView ===================================================⬆️
+    // contentBoxView ====================================================⬆️
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -116,6 +116,25 @@ class MockCell: UITableViewCell {
             $0.trailing.equalToSuperview().inset(10)
             $0.bottom.equalToSuperview().inset(10)
         }
+    }
+    
+    // SecondVC
+    func updateUI(_ cellData: Mock) {
+        guard let id = cellData.id,
+              let email = cellData.email,
+              let avatar = cellData.avatar,
+              let title = cellData.title,
+              let content = cellData.content else { return }
+        
+        self.idLabel.text = "id: \(id)"
+        self.emailLabel.text = email
+        self.avatarLabel.text = avatar
+        self.titleLabel.text = title
+        self.contentLabel.text = content
+        
+        self.layer.borderWidth = 1
+        self.layer.borderColor = UIColor.textPoint?.cgColor
+        self.layer.cornerRadius = 4
     }
 }
 

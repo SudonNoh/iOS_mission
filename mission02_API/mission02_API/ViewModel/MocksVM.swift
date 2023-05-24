@@ -17,7 +17,31 @@ class MocksVM {
     var mocks : BehaviorRelay<[Mock]> = BehaviorRelay<[Mock]>(value: [])
     var errorMsg : BehaviorRelay<String> = BehaviorRelay<String>(value: "")
     
+    var isLoading : BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)
+
+    var pageInfo : BehaviorRelay<Meta?> = BehaviorRelay<Meta?>(value: nil)
+    var notifyHasNextPage : Observable<Bool>
+    
+    var currentPage : BehaviorRelay<Int> = BehaviorRelay<Int>(value: 1)
+    var currentPageInfo : Observable<String>
+    
     init() {
+        
+        self.notifyHasNextPage = pageInfo.skip(1).map {$0?.hasNext() ?? true}
+        self.currentPageInfo = self.currentPage.map {"\($0)"}
+        
+        pageInfo
+            .compactMap { $0 }
+            .map {
+                if let currentPage = $0.currentPage {
+                    return currentPage
+                } else {
+                    return 1
+                }
+            }
+            .bind(onNext: self.currentPage.accept(_:))
+            .disposed(by: disposeBag)
+        
         fetchMocks()
     }
     
@@ -26,18 +50,46 @@ class MocksVM {
         _ orderBy: orderBy = .desc,
         _ perPage: Int = 10
     ) {
+        
+        if self.isLoading.value {
+            return
+        }
+        
+        self.isLoading.accept(true)
+        
         Observable.just(())
             .delay(RxTimeInterval.milliseconds(700), scheduler: MainScheduler.instance)
             .flatMapLatest {MocksAPI.fetchsMocks(page, orderBy, perPage)}
             .do(onError: { Error in
                 self.errorMsg.accept(self.errorHandler(Error))
+            }, onCompleted: {
+                self.isLoading.accept(false)
             })
             .subscribe(onNext: { response in
-                if let fetchMocks = response.data {
+                
+                guard let fetchMocks = response.data,
+                      let pageInfo = response.meta else { return }
+                
+                if page == 1 {
                     self.mocks.accept(fetchMocks)
+                } else {
+                    let addedMocks = self.mocks.value + fetchMocks
+                    self.mocks.accept(addedMocks)
                 }
+                self.pageInfo.accept(pageInfo)
             })
             .disposed(by: disposeBag)
+    }
+    
+    func fetchMocksMore() {
+        
+        guard let pageInfo = self.pageInfo.value,
+              pageInfo.hasNext(),
+              !isLoading.value else {
+            return
+        }
+
+        self.fetchMocks(currentPage.value + 1)
     }
     
     fileprivate func errorHandler(_ err: Error) -> String {

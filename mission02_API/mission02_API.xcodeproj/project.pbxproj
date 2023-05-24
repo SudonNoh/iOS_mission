@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA659F232A1DD4AF007EE3B1 /* UIScrollView+Reactive+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA659F222A1DD4AF007EE3B1 /* UIScrollView+Reactive+Ext.swift */; };
 		EA72C2A42A186BC600687F88 /* MocksResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA72C2A32A186BC600687F88 /* MocksResponse.swift */; };
 		EA72C2A62A188B5000687F88 /* Preview+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA72C2A52A188B5000687F88 /* Preview+Ext.swift */; };
 		EA850F5E2A17C2A3001823B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA850F5D2A17C2A3001823B7 /* AppDelegate.swift */; };
@@ -29,10 +30,10 @@
 		EAEBEFB52A1CBD8E005F1DC3 /* MocksError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEBEFB42A1CBD8E005F1DC3 /* MocksError.swift */; };
 		EAEBEFB72A1CBE20005F1DC3 /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEBEFB62A1CBE20005F1DC3 /* ErrorResponse.swift */; };
 		EAEBEFB92A1CC23E005F1DC3 /* FirstDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEBEFB82A1CC23E005F1DC3 /* FirstDetailVC.swift */; };
-		EAEBEFBB2A1CC24B005F1DC3 /* SecondDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEBEFBA2A1CC24B005F1DC3 /* SecondDetailVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EA659F222A1DD4AF007EE3B1 /* UIScrollView+Reactive+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Reactive+Ext.swift"; sourceTree = "<group>"; };
 		EA72C2A32A186BC600687F88 /* MocksResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocksResponse.swift; sourceTree = "<group>"; };
 		EA72C2A52A188B5000687F88 /* Preview+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preview+Ext.swift"; sourceTree = "<group>"; };
 		EA850F5A2A17C2A3001823B7 /* mission02_API.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mission02_API.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,7 +52,6 @@
 		EAEBEFB42A1CBD8E005F1DC3 /* MocksError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocksError.swift; sourceTree = "<group>"; };
 		EAEBEFB62A1CBE20005F1DC3 /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 		EAEBEFB82A1CC23E005F1DC3 /* FirstDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstDetailVC.swift; sourceTree = "<group>"; };
-		EAEBEFBA2A1CC24B005F1DC3 /* SecondDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondDetailVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,7 +111,6 @@
 				EA850F612A17C2A3001823B7 /* FirstVC.swift */,
 				EAEBEFB22A1CBD09005F1DC3 /* SecondVC.swift */,
 				EAEBEFB82A1CC23E005F1DC3 /* FirstDetailVC.swift */,
-				EAEBEFBA2A1CC24B005F1DC3 /* SecondDetailVC.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -130,6 +129,7 @@
 			children = (
 				EA850F822A17C3F3001823B7 /* UIColor+Ext.swift */,
 				EA72C2A52A188B5000687F88 /* Preview+Ext.swift */,
+				EA659F222A1DD4AF007EE3B1 /* UIScrollView+Reactive+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -255,7 +255,7 @@
 				EAEBEFB32A1CBD09005F1DC3 /* SecondVC.swift in Sources */,
 				EA850F912A17CC5A001823B7 /* MocksVM.swift in Sources */,
 				EA850F832A17C3F3001823B7 /* UIColor+Ext.swift in Sources */,
-				EAEBEFBB2A1CC24B005F1DC3 /* SecondDetailVC.swift in Sources */,
+				EA659F232A1DD4AF007EE3B1 /* UIScrollView+Reactive+Ext.swift in Sources */,
 				EA850F602A17C2A3001823B7 /* SceneDelegate.swift in Sources */,
 				EA850F7F2A17C3A8001823B7 /* MockCell.swift in Sources */,
 				EAEBEFB72A1CBE20005F1DC3 /* ErrorResponse.swift in Sources */,

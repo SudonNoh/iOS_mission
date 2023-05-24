@@ -42,24 +42,18 @@ class SecondVC: CustomVC {
             .mocks
             .bind(to:self.mockTableView.rx.items(cellIdentifier: "MockCell", cellType: MockCell.self)) {[weak self] idx, cellData, cell in
                 guard let self = self else { return }
-                
-                guard let id = cellData.id,
-                      let email = cellData.email,
-                      let avatar = cellData.avatar,
-                      let title = cellData.title,
-                      let content = cellData.content else { return }
-                
-                cell.idLabel.text = "id: \(id)"
-                cell.emailLabel.text = email
-                cell.avatarLabel.text = avatar
-                cell.titleLabel.text = title
-                cell.contentLabel.text = content
-                
-                cell.layer.borderWidth = 1
-                cell.layer.borderColor = UIColor.textPoint?.cgColor
-                cell.layer.cornerRadius = 4
-                
-            }.disposed(by: disposeBag)
+                cell.updateUI(cellData)
+            }
+            .disposed(by: disposeBag)
+        
+        self.mocksVM
+            .errorMsg
+            .skip(1)
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { VC, msg in
+                VC.showErrorAlert(errMsg: msg)
+            }).disposed(by: disposeBag)
     }
 }
 
@@ -76,5 +70,14 @@ extension SecondVC {
             $0.verticalEdges.equalTo(self.view.safeAreaLayoutGuide.snp.verticalEdges).inset(20)
             $0.horizontalEdges.equalTo(self.view.safeAreaLayoutGuide.snp.horizontalEdges).inset(15)
         }
+    }
+}
+
+//MARK: - Alert
+extension SecondVC {
+    @objc fileprivate func showErrorAlert(errMsg: String){
+        let alert = UIAlertController(title: "안내", message: errMsg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "닫기", style: .cancel))
+        self.present(alert, animated: true, completion: nil)
     }
 }

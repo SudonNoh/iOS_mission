@@ -27,7 +27,10 @@ enum MocksAPI {
     ) -> Observable<MocksResponse> {
         
         let urlString = baseUrl + "?page=\(page)&order_by=\(orderBy)&per_page=\(perPage)"
-        
+       
+        //MARK: - 질문 3. 에러를 리턴하면 unhandledError 로그가 찍히는데 문제가 없는지?
+        // return Observable.error(APIError.notAllowedUrl)
+        // Unhandled error happened: notAllowedUrl
         guard let url = URL(string: urlString) else {
             return Observable.error(APIError.notAllowedUrl)
         }
@@ -40,7 +43,7 @@ enum MocksAPI {
             .rx
             .response(request: urlRequest)
             .map({ (urlResponse: HTTPURLResponse, data: Data) -> Data in
-                    
+                
                 switch urlResponse.statusCode {
                 case 400: throw APIError.badStatus(code: 400)
                 default: break
@@ -53,5 +56,28 @@ enum MocksAPI {
                 return data
             })
             .decode(type: MocksResponse.self, decoder: JSONDecoder())
+            .map { response in
+                guard let mocks = response.data,
+                      !mocks.isEmpty else {
+                    throw APIError.noContent
+                }
+                return response
+            }
+            .catch { err in
+                
+                if let error = err as? APIError {
+                    throw error
+                }
+                
+                if let _ = err as? DecodingError {
+                    throw APIError.decodingError
+                }
+                
+                throw APIError.unknown(err)
+            }
+    }
+    
+    static func fetchAMock(id: Int = 1) {
+        
     }
 }
