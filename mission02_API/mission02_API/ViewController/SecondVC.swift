@@ -33,10 +33,43 @@ class SecondVC: CustomVC {
         $0.backgroundColor = .bgColor
     }
     
+    lazy var bottomIndicator: UIActivityIndicatorView = UIActivityIndicatorView().then {
+        $0.style = .medium
+        $0.color = UIColor.systemBlue
+        $0.startAnimating()
+        $0.frame = CGRect(x: 0, y: 0, width: self.mockTableView.bounds.width, height: 44)
+    }
+    
+    lazy var bottomNoMoreDataView: UIView = UIView().then {
+        $0.frame = CGRect(x: 0, y: 0, width: mockTableView.bounds.width, height: 60)
+        $0.backgroundColor = .clear
+
+        let label = UILabel().then {
+            $0.text = "더 이상 가져올 데이터가 없습니다."
+            $0.textColor = .white
+        }
+
+        $0.addSubview(label)
+
+        label.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         self.mockTableView.register(MockCell.self, forCellReuseIdentifier: "MockCell")
+        
+        self.mocksVM
+            .isLoading
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { VC, isLoading in
+                self.mockTableView.tableFooterView = isLoading ? self.bottomIndicator : self.bottomNoMoreDataView
+            })
+            .disposed(by: disposeBag)
         
         self.mocksVM
             .mocks
@@ -44,6 +77,45 @@ class SecondVC: CustomVC {
                 guard let self = self else { return }
                 cell.updateUI(cellData)
             }
+            .disposed(by: disposeBag)
+        
+        self.mockTableView
+            .rx
+            .itemSelected
+            .subscribe(onNext: {data in
+                let vc = SecondDetailVC()
+                guard let id = self.mocksVM.mocks.value[data.row].id else { return }
+                vc.title = "\(id)"
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        self.mockTableView
+            .rx
+            .estimatedRowHeight
+            .onNext(UITableView.automaticDimension)
+        
+        self.mockTableView
+            .rx
+            .itemDeleted
+            .subscribe({ data in
+                guard let indexPath = data.element,
+                      let id = self.mocksVM.mocks.value[indexPath.row].id else {return}
+                self.mocksVM.deleteMocksItem(id: id)
+            })
+            .disposed(by: disposeBag)
+        
+        self.mocksVM
+            .notifyHasNextPage
+            .debug("❤️")
+            .observe(on: MainScheduler.instance)
+            .map { !$0 ? self.bottomNoMoreDataView : nil }
+            .bind(to: self.mockTableView.rx.tableFooterView)
+            .disposed(by: disposeBag)
+        
+        self.mockTableView
+            .rx.bottomReached
+            .bind(onNext: { self.mocksVM.fetchMocksMore() })
             .disposed(by: disposeBag)
         
         self.mocksVM

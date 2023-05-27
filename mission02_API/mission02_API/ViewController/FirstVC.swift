@@ -40,7 +40,6 @@ class FirstVC: CustomVC {
         $0.frame = CGRect(x: 0, y: 0, width: self.mockTableView.bounds.width, height: 44)
     }
     
-    //MARK: - 질문 4. bottomNoMoreDataView가 보이지 않는다.
     lazy var bottomNoMoreDataView: UIView = UIView().then {
         $0.frame = CGRect(x: 0, y: 0, width: mockTableView.bounds.width, height: 60)
         $0.backgroundColor = .blue
@@ -82,12 +81,11 @@ class FirstVC: CustomVC {
             .withUnretained(self)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { VC, isLoading in
-                self.mockTableView.tableFooterView = isLoading ? self.bottomIndicator : nil
+                self.mockTableView.tableFooterView = isLoading ? self.bottomIndicator : self.bottomNoMoreDataView
             })
             .disposed(by: disposeBag)
             
         /// Error
-        //MARK: - 질문 1. Rx 에러 처리 방식이 맞는지?
         self.mocksVM
             .errorMsg
             .skip(1)
@@ -207,7 +205,6 @@ extension FirstVC: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(#fileID, #function, #line, "- \(indexPath.row + 1) 번째 행이 클릭되었습니다. !")
         let vc = FirstDetailVC()
         guard let id = self.mocksVM.mocks.value[indexPath.row].id else { return }
         vc.title = "\(id)"
@@ -219,10 +216,8 @@ extension FirstVC: UITableViewDelegate {
         let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { (action, view, completionHandler) in
             
             self.showDeleteAlert() {
-                //MARK: - 질문2. 이런 식으로 요소를 삭제하는 것이 맞는지?
-                var updateValue = self.mocksVM.mocks.value // Array<Mock>
-                updateValue.remove(at: indexPath.row)
-                self.mocksVM.mocks.accept(updateValue)
+                guard let id = self.mocksVM.mocks.value[indexPath.row].id else {return}
+                self.mocksVM.deleteMocksItem(id: id)
                 
                 completionHandler(true)
             }

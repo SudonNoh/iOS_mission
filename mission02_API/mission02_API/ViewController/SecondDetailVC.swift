@@ -1,17 +1,10 @@
-//
-//  FirstDetailVC.swift
-//  mission02_API
-//
-//  Created by Sudon Noh on 2023/05/23.
-//
-
 import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
 import RxRelay
 
-class FirstDetailVC: CustomVC {
+class SecondDetailVC: CustomVC {
     
     // ScrollView Setting =================================================⬇️
     lazy var scrollView: UIScrollView = UIScrollView().then {
@@ -127,18 +120,14 @@ class FirstDetailVC: CustomVC {
         setupUI()
         
         guard let id = self.title else {return}
-        let mocks = DetailMocksVM(id: id)
-//        mocks
-//            .mock
-//            .withUnretained(self)
-//            .observe(on: MainScheduler.instance)
-//            .subscribe { (VC, mock) in
-//                self.settingContent(mock: mock)
-//            }.disposed(by: disposeBag)
-        mocks.mock
+        var mocks = DetailMocksVM(id: id)
+        mocks
+            .mock
+            .withUnretained(self)
             .observe(on: MainScheduler.instance)
-            .bind(to: self.rx.mock)
-            .disposed(by: disposeBag)
+            .subscribe { (VC, mock) in
+                self.settingContent(mock: mock)
+            }.disposed(by: disposeBag)
     }
     
     fileprivate func setupUI() {
@@ -171,17 +160,5 @@ class FirstDetailVC: CustomVC {
         self.avatarLabel.text = "Avatar : " + avatar
         self.titleLabel.text = "Title : " + title
         self.contentLabel.text = "Content : " + content
-    }
-}
-
-private extension Reactive where Base: FirstDetailVC {
-    var mock: Binder<Mock> {
-        return Binder(base) { firstDetailVC, mock in
-            firstDetailVC.idLabel.text = "ID : \(mock.id)"
-            firstDetailVC.emailLabel.text = "Email : " + (mock.email ?? "")
-            firstDetailVC.avatarLabel.text = "Avatar : " + (mock.avatar ?? "")
-            firstDetailVC.titleLabel.text = "Title : " + (mock.title ?? "")
-            firstDetailVC.contentLabel.text = "Content : " + (mock.content ?? "")
-        }
     }
 }

@@ -25,6 +25,8 @@ class MocksVM {
     var currentPage : BehaviorRelay<Int> = BehaviorRelay<Int>(value: 1)
     var currentPageInfo : Observable<String>
     
+    var mock : BehaviorRelay<Mock?> = BehaviorRelay<Mock?>(value:nil)
+    
     init() {
         
         self.notifyHasNextPage = pageInfo.skip(1).map {$0?.hasNext() ?? true}
@@ -45,6 +47,7 @@ class MocksVM {
         fetchMocks()
     }
     
+    /// 전체보기
     func fetchMocks(
         _ page: Int = 1,
         _ orderBy: orderBy = .desc,
@@ -59,7 +62,7 @@ class MocksVM {
         
         Observable.just(())
             .delay(RxTimeInterval.milliseconds(700), scheduler: MainScheduler.instance)
-            .flatMapLatest {MocksAPI.fetchsMocks(page, orderBy, perPage)}
+            .flatMapLatest {MocksAPI.fetchMocksAPI(page, orderBy, perPage)}
             .do(onError: { Error in
                 self.errorMsg.accept(self.errorHandler(Error))
             }, onCompleted: {
@@ -81,6 +84,7 @@ class MocksVM {
             .disposed(by: disposeBag)
     }
     
+    /// 더보기
     func fetchMocksMore() {
         
         guard let pageInfo = self.pageInfo.value,
@@ -92,6 +96,13 @@ class MocksVM {
         self.fetchMocks(currentPage.value + 1)
     }
     
+    /// 삭제
+    func deleteMocksItem(id: Int) {
+        var _mocks = self.mocks.value.filter { $0.id ?? 0 != id }
+        self.mocks.accept(_mocks)
+    }
+    
+    /// Error Handler
     fileprivate func errorHandler(_ err: Error) -> String {
         guard let apiError = err as? MocksAPI.APIError else {
             return ""

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA57D0822A1E14EA000D0530 /* DetailMocksVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57D0812A1E14EA000D0530 /* DetailMocksVM.swift */; };
 		EA659F232A1DD4AF007EE3B1 /* UIScrollView+Reactive+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA659F222A1DD4AF007EE3B1 /* UIScrollView+Reactive+Ext.swift */; };
 		EA72C2A42A186BC600687F88 /* MocksResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA72C2A32A186BC600687F88 /* MocksResponse.swift */; };
 		EA72C2A62A188B5000687F88 /* Preview+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA72C2A52A188B5000687F88 /* Preview+Ext.swift */; };
@@ -26,6 +27,7 @@
 		EA850F882A17C446001823B7 /* Fakery in Frameworks */ = {isa = PBXBuildFile; productRef = EA850F872A17C446001823B7 /* Fakery */; };
 		EA850F912A17CC5A001823B7 /* MocksVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA850F902A17CC5A001823B7 /* MocksVM.swift */; };
 		EA850F932A17CC69001823B7 /* MocksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA850F922A17CC69001823B7 /* MocksAPI.swift */; };
+		EAA0F6522A20551500BB43DA /* SecondDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA0F6512A20551500BB43DA /* SecondDetailVC.swift */; };
 		EAEBEFB32A1CBD09005F1DC3 /* SecondVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEBEFB22A1CBD09005F1DC3 /* SecondVC.swift */; };
 		EAEBEFB52A1CBD8E005F1DC3 /* MocksError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEBEFB42A1CBD8E005F1DC3 /* MocksError.swift */; };
 		EAEBEFB72A1CBE20005F1DC3 /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEBEFB62A1CBE20005F1DC3 /* ErrorResponse.swift */; };
@@ -33,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EA57D0812A1E14EA000D0530 /* DetailMocksVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMocksVM.swift; sourceTree = "<group>"; };
 		EA659F222A1DD4AF007EE3B1 /* UIScrollView+Reactive+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Reactive+Ext.swift"; sourceTree = "<group>"; };
 		EA72C2A32A186BC600687F88 /* MocksResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocksResponse.swift; sourceTree = "<group>"; };
 		EA72C2A52A188B5000687F88 /* Preview+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preview+Ext.swift"; sourceTree = "<group>"; };
@@ -48,6 +51,7 @@
 		EA850F822A17C3F3001823B7 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		EA850F902A17CC5A001823B7 /* MocksVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocksVM.swift; sourceTree = "<group>"; };
 		EA850F922A17CC69001823B7 /* MocksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocksAPI.swift; sourceTree = "<group>"; };
+		EAA0F6512A20551500BB43DA /* SecondDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondDetailVC.swift; sourceTree = "<group>"; };
 		EAEBEFB22A1CBD09005F1DC3 /* SecondVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondVC.swift; sourceTree = "<group>"; };
 		EAEBEFB42A1CBD8E005F1DC3 /* MocksError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocksError.swift; sourceTree = "<group>"; };
 		EAEBEFB62A1CBE20005F1DC3 /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
@@ -109,8 +113,9 @@
 			isa = PBXGroup;
 			children = (
 				EA850F612A17C2A3001823B7 /* FirstVC.swift */,
-				EAEBEFB22A1CBD09005F1DC3 /* SecondVC.swift */,
 				EAEBEFB82A1CC23E005F1DC3 /* FirstDetailVC.swift */,
+				EAEBEFB22A1CBD09005F1DC3 /* SecondVC.swift */,
+				EAA0F6512A20551500BB43DA /* SecondDetailVC.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -156,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				EA850F902A17CC5A001823B7 /* MocksVM.swift */,
+				EA57D0812A1E14EA000D0530 /* DetailMocksVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -254,6 +260,8 @@
 				EA850F5E2A17C2A3001823B7 /* AppDelegate.swift in Sources */,
 				EAEBEFB32A1CBD09005F1DC3 /* SecondVC.swift in Sources */,
 				EA850F912A17CC5A001823B7 /* MocksVM.swift in Sources */,
+				EAA0F6522A20551500BB43DA /* SecondDetailVC.swift in Sources */,
+				EA57D0822A1E14EA000D0530 /* DetailMocksVM.swift in Sources */,
 				EA850F832A17C3F3001823B7 /* UIColor+Ext.swift in Sources */,
 				EA659F232A1DD4AF007EE3B1 /* UIScrollView+Reactive+Ext.swift in Sources */,
 				EA850F602A17C2A3001823B7 /* SceneDelegate.swift in Sources */,
