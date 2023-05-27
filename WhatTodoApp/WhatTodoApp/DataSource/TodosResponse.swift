@@ -7,7 +7,7 @@
 
 
 // MARK: - TodosResponse
-struct TodosResponse: Codable {
+struct TodoListResponse: Codable {
     let data: [Todo]?
     let meta: Meta?
     let message: String?

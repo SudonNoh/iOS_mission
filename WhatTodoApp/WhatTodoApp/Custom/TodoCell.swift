@@ -73,6 +73,40 @@ class TodoCell: UITableViewCell {
         
         dateStackView.setContentCompressionResistancePriority(.required, for: .vertical)
     }
+    
+    func updateUI(_ data: Todo) {
+        guard let title = data.title,
+              let updateDate = data.updatedAt,
+              let createDate = data.createdAt else {return}
+        
+        let updateAt = dateFormatter(frontString: "update:", date: updateDate)
+        let createAt = dateFormatter(frontString: "create:", date: createDate)
+        
+        self.titleLabel.text = title
+        self.updatedDateLabel.text = updateAt
+        self.createdDateLabel.text = createAt
+    }
+    
+    /// Change Date Format String To String with Custom String
+    /// - Parameters:
+    ///   - frontString: It will be front of return value
+    ///   - date: date String
+    /// - Returns: frontString + date : "frontString + yyyy-MM-dd HH시 mm분"
+    fileprivate func dateFormatter(frontString: String, date: String) -> String {
+        
+        let dateFormat1st = "yyyy-MM-dd'T'HH:mm:ss.ssssssZ"
+        let dateFormat2nd = "yyyy-MM-dd HH시 mm분"
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = dateFormat1st
+        let dateFromString = dateFormatter.date(from: date)
+        
+        dateFormatter.dateFormat = dateFormat2nd
+        guard let confirmDate = dateFromString else { return "" }
+        let stringDate = dateFormatter.string(from: confirmDate)
+        
+        return frontString + " " + stringDate
+    }
 }
 
 

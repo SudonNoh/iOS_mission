@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 import SnapKit
 import Then
 
@@ -29,15 +31,23 @@ class HomeVC: CustomVC {
     
     var dataSource: [DummyData] = DummyData.getDummies()
     
+    var VM: HomeVM = HomeVM()
+    var disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         self.todoTableView.register(TodoCell.self, forCellReuseIdentifier: "TodoCell")
-        self.todoTableView.dataSource = self
-        self.todoTableView.delegate = self
         
-        TodoVM.init()
+        self.VM
+            .todoList
+            .bind(to: self.todoTableView.rx.items(
+                cellIdentifier: "TodoCell",
+                cellType: TodoCell.self
+            )) {[weak self] idx, cellData, cell in
+                cell.updateUI(cellData)
+            }
+            .disposed(by: disposeBag)
     }
 }
 

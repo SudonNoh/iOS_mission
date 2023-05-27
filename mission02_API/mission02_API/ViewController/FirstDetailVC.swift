@@ -128,13 +128,7 @@ class FirstDetailVC: CustomVC {
         
         guard let id = self.title else {return}
         let mocks = DetailMocksVM(id: id)
-//        mocks
-//            .mock
-//            .withUnretained(self)
-//            .observe(on: MainScheduler.instance)
-//            .subscribe { (VC, mock) in
-//                self.settingContent(mock: mock)
-//            }.disposed(by: disposeBag)
+
         mocks.mock
             .observe(on: MainScheduler.instance)
             .bind(to: self.rx.mock)
