@@ -12,6 +12,25 @@ import Then
 
 class TodoCell: UITableViewCell {
     
+    lazy var contentBoxView: UIView = UIView().then {
+        $0.addSubview(titleLabel)
+        $0.addSubview(dateStackView)
+        $0.layer.borderColor = UIColor.textPoint?.cgColor
+        $0.layer.borderWidth = 1
+        $0.layer.cornerRadius = 5
+        
+        titleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(10)
+            $0.horizontalEdges.equalToSuperview().inset(10)
+        }
+        
+        dateStackView.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(10)
+            $0.horizontalEdges.equalToSuperview().inset(10)
+            $0.bottom.equalTo(createdDateLabel.snp.bottom)
+        }
+    }
+    
     lazy var titleLabel: UILabel = UILabel().then {
         $0.text = "해야 할 일들을 정리하는 곳 입니다."
         $0.numberOfLines = 0
@@ -45,6 +64,13 @@ class TodoCell: UITableViewCell {
         $0.textAlignment = .center
     }
     
+    lazy var bottomMarginView: UIView = UIView().then {
+        $0.backgroundColor = .bgColor
+    }
+    lazy var topMarginView: UIView = UIView().then {
+        $0.backgroundColor = .bgColor
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -57,21 +83,28 @@ class TodoCell: UITableViewCell {
     fileprivate func setupUI() {
         self.backgroundColor = .bgColor
         
-        self.contentView.addSubview(titleLabel)
-        self.contentView.addSubview(dateStackView)
+        self.contentView.addSubview(contentBoxView)
+        self.contentView.addSubview(topMarginView)
+        self.contentView.addSubview(bottomMarginView)
         
-        titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(12)
-            $0.horizontalEdges.equalToSuperview().inset(12)
+        topMarginView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(10)
         }
         
-        dateStackView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(10)
-            $0.horizontalEdges.equalToSuperview().inset(5)
-            $0.bottom.equalToSuperview().inset(10)
+        contentBoxView.snp.makeConstraints {
+            $0.top.equalTo(topMarginView.snp.bottom)
+            $0.horizontalEdges.equalToSuperview()
+            $0.bottom.equalTo(dateStackView.snp.bottom).offset(10)
         }
         
-        dateStackView.setContentCompressionResistancePriority(.required, for: .vertical)
+        bottomMarginView.snp.makeConstraints {
+            $0.top.equalTo(contentBoxView.snp.bottom)
+            $0.horizontalEdges.equalToSuperview()
+            $0.bottom.equalToSuperview()
+            $0.height.equalTo(10)
+        }
     }
     
     func updateUI(_ data: Todo) {

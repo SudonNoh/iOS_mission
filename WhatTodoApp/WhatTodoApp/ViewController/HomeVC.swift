@@ -37,17 +37,29 @@ class HomeVC: CustomVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        self.todoTableView.register(TodoCell.self, forCellReuseIdentifier: "TodoCell")
+        self.todoTableView.register(TodoCell.self, forCellReuseIdentifier: TodoCell.reuseIdentifire)
         
         self.VM
             .todoList
             .bind(to: self.todoTableView.rx.items(
-                cellIdentifier: "TodoCell",
+                cellIdentifier: TodoCell.reuseIdentifire,
                 cellType: TodoCell.self
             )) {[weak self] idx, cellData, cell in
                 cell.updateUI(cellData)
             }
             .disposed(by: disposeBag)
+        
+        self.todoTableView
+            .rx
+            .estimatedRowHeight
+            .onNext(UITableView.automaticDimension)
+        
+        self.todoTableView
+            .rx
+            .itemSelected
+            .subscribe(onNext: { idx in
+                print("클릭되었다. \(idx)")
+            }).disposed(by: disposeBag)
     }
 }
 
@@ -67,61 +79,25 @@ extension HomeVC {
     }
 }
 
-extension HomeVC: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSource.count
-    }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "TodoCell", for: indexPath) as? TodoCell else {
-            print(#fileID, #function, #line, "- 오류로 진입")
-            return UITableViewCell()
-        }
-        
-        let cellData = dataSource[indexPath.row]
-        
-        cell.titleLabel.numberOfLines = 0
-        cell.titleLabel.text = cellData.title
-        cell.updatedDateLabel.text = "Update : " + cellData.updateDate
-        cell.createdDateLabel.text = "Create : " + cellData.createDate
-        
-        cell.layer.borderWidth = 1
-        cell.layer.borderColor = UIColor.textPoint?.cgColor
-        cell.layer.cornerRadius = 4
-        
-        return cell
-    }
-}
-
-extension HomeVC: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(#fileID, #function, #line, "- \(indexPath.row + 1) 번째 행이 클릭되었습니다. !")
-    }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { (action, view, completionHandler) in
-            self.dataSource.remove(at: indexPath.row)
-            self.todoTableView.deleteRows(at: [indexPath], with: .automatic)
-            completionHandler(true)
-        }
-        deleteAction.backgroundColor = .red
-        
-        return UISwipeActionsConfiguration(actions: [deleteAction])
-    }
-}
-
-#if DEBUG
-import SwiftUI
-
-struct HomeVCPreView: PreviewProvider {
-    static var previews: some View {
-        HomeVC().toPreview().ignoresSafeArea()
-    }
-}
-#endif
+//extension HomeVC: UITableViewDelegate {
+//
+//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableView.automaticDimension
+//    }
+//
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        print(#fileID, #function, #line, "- \(indexPath.row + 1) 번째 행이 클릭되었습니다. !")
+//    }
+//
+//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+//        let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { (action, view, completionHandler) in
+//            self.dataSource.remove(at: indexPath.row)
+//            self.todoTableView.deleteRows(at: [indexPath], with: .automatic)
+//            completionHandler(true)
+//        }
+//        deleteAction.backgroundColor = .red
+//
+//        return UISwipeActionsConfiguration(actions: [deleteAction])
+//    }
+//}

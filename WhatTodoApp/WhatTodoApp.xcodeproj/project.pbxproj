@@ -28,6 +28,7 @@
 		EAAA8E2F2A174BDF001E1DF0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAAA8E2E2A174BDF001E1DF0 /* SnapKit */; };
 		EAAA8E322A174BEA001E1DF0 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAAA8E312A174BEA001E1DF0 /* Then */; };
 		EAAA8E352A174C26001E1DF0 /* Fakery in Frameworks */ = {isa = PBXBuildFile; productRef = EAAA8E342A174C26001E1DF0 /* Fakery */; };
+		EABCFB502A2345E3008BFAE9 /* ReuseIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABCFB4F2A2345E3008BFAE9 /* ReuseIdentifiable.swift */; };
 		EAF7F5302A16248500BD9A15 /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7F52F2A16248500BD9A15 /* DummyData.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		EA23A55A2A156E38002894F2 /* AddVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVC.swift; sourceTree = "<group>"; };
 		EAAA8E232A173C34001E1DF0 /* TodosResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosResponse.swift; sourceTree = "<group>"; };
 		EAAA8E252A173E3D001E1DF0 /* HomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVM.swift; sourceTree = "<group>"; };
+		EABCFB4F2A2345E3008BFAE9 /* ReuseIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseIdentifiable.swift; sourceTree = "<group>"; };
 		EAF7F52F2A16248500BD9A15 /* DummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,6 +145,7 @@
 			children = (
 				EA23A5562A155CD6002894F2 /* Preview+Ext.swift */,
 				EA23A5582A1561F3002894F2 /* UIColor+Ext.swift */,
+				EABCFB4F2A2345E3008BFAE9 /* ReuseIdentifiable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EA23A55B2A156E38002894F2 /* AddVC.swift in Sources */,
+				EABCFB502A2345E3008BFAE9 /* ReuseIdentifiable.swift in Sources */,
 				EA227D1A2A15DEBB0006E74B /* TodoAPI.swift in Sources */,
 				EA23A5402A155760002894F2 /* HomeVC.swift in Sources */,
 				EA23A53C2A155760002894F2 /* AppDelegate.swift in Sources */,
