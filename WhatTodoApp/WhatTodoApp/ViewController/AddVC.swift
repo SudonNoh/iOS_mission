@@ -14,6 +14,11 @@ import Then
 class AddVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .yellow
+    }
+}
+
+extension AddVC {
+    func setup() {
+        self.view.backgroundColor = .bgColor
     }
 }

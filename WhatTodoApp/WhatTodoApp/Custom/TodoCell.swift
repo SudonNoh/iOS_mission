@@ -15,9 +15,6 @@ class TodoCell: UITableViewCell {
     lazy var contentBoxView: UIView = UIView().then {
         $0.addSubview(titleLabel)
         $0.addSubview(dateStackView)
-        $0.layer.borderColor = UIColor.textPoint?.cgColor
-        $0.layer.borderWidth = 1
-        $0.layer.cornerRadius = 5
         
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(10)
@@ -118,27 +115,6 @@ class TodoCell: UITableViewCell {
         self.titleLabel.text = title
         self.updatedDateLabel.text = updateAt
         self.createdDateLabel.text = createAt
-    }
-    
-    /// Change Date Format String To String with Custom String
-    /// - Parameters:
-    ///   - frontString: It will be front of return value
-    ///   - date: date String
-    /// - Returns: frontString + date : "frontString + yyyy-MM-dd HH시 mm분"
-    fileprivate func dateFormatter(frontString: String, date: String) -> String {
-        
-        let dateFormat1st = "yyyy-MM-dd'T'HH:mm:ss.ssssssZ"
-        let dateFormat2nd = "yyyy-MM-dd HH시 mm분"
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = dateFormat1st
-        let dateFromString = dateFormatter.date(from: date)
-        
-        dateFormatter.dateFormat = dateFormat2nd
-        guard let confirmDate = dateFromString else { return "" }
-        let stringDate = dateFormatter.string(from: confirmDate)
-        
-        return frontString + " " + stringDate
     }
 }
 

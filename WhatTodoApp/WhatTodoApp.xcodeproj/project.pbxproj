@@ -23,8 +23,11 @@
 		EA23A5572A155CD6002894F2 /* Preview+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA23A5562A155CD6002894F2 /* Preview+Ext.swift */; };
 		EA23A5592A1561F3002894F2 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA23A5582A1561F3002894F2 /* UIColor+Ext.swift */; };
 		EA23A55B2A156E38002894F2 /* AddVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA23A55A2A156E38002894F2 /* AddVC.swift */; };
-		EA7376AB2A24A88600C300EA /* UITableView+Rx+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7376AA2A24A88600C300EA /* UITableView+Rx+Ext.swift */; };
-		EA7376AE2A24AD3300C300EA /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7376AD2A24AD3300C300EA /* Example.swift */; };
+		EA711E182A25BBEE0080C0A3 /* CustomVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA711E172A25BBEE0080C0A3 /* CustomVM.swift */; };
+		EA711E1A2A25D3330080C0A3 /* UIScrollView+Rx+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA711E192A25D3330080C0A3 /* UIScrollView+Rx+Ext.swift */; };
+		EA711E1C2A25DAF40080C0A3 /* EditVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA711E1B2A25DAF40080C0A3 /* EditVC.swift */; };
+		EA711E1E2A25E14E0080C0A3 /* CustomFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA711E1D2A25E14E0080C0A3 /* CustomFunctions.swift */; };
+		EA711E202A25E3450080C0A3 /* EditVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA711E1F2A25E3450080C0A3 /* EditVM.swift */; };
 		EAAA8E242A173C34001E1DF0 /* TodosResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAA8E232A173C34001E1DF0 /* TodosResponse.swift */; };
 		EAAA8E262A173E3D001E1DF0 /* HomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAA8E252A173E3D001E1DF0 /* HomeVM.swift */; };
 		EAAA8E2F2A174BDF001E1DF0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAAA8E2E2A174BDF001E1DF0 /* SnapKit */; };
@@ -50,8 +53,11 @@
 		EA23A5562A155CD6002894F2 /* Preview+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preview+Ext.swift"; sourceTree = "<group>"; };
 		EA23A5582A1561F3002894F2 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		EA23A55A2A156E38002894F2 /* AddVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVC.swift; sourceTree = "<group>"; };
-		EA7376AA2A24A88600C300EA /* UITableView+Rx+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Rx+Ext.swift"; sourceTree = "<group>"; };
-		EA7376AD2A24AD3300C300EA /* Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
+		EA711E172A25BBEE0080C0A3 /* CustomVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomVM.swift; sourceTree = "<group>"; };
+		EA711E192A25D3330080C0A3 /* UIScrollView+Rx+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Rx+Ext.swift"; sourceTree = "<group>"; };
+		EA711E1B2A25DAF40080C0A3 /* EditVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVC.swift; sourceTree = "<group>"; };
+		EA711E1D2A25E14E0080C0A3 /* CustomFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFunctions.swift; sourceTree = "<group>"; };
+		EA711E1F2A25E3450080C0A3 /* EditVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditVM.swift; sourceTree = "<group>"; };
 		EAAA8E232A173C34001E1DF0 /* TodosResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodosResponse.swift; sourceTree = "<group>"; };
 		EAAA8E252A173E3D001E1DF0 /* HomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVM.swift; sourceTree = "<group>"; };
 		EABCFB4F2A2345E3008BFAE9 /* ReuseIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseIdentifiable.swift; sourceTree = "<group>"; };
@@ -89,6 +95,7 @@
 			children = (
 				EA23A53F2A155760002894F2 /* HomeVC.swift */,
 				EA23A55A2A156E38002894F2 /* AddVC.swift */,
+				EA711E1B2A25DAF40080C0A3 /* EditVC.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -97,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				EAAA8E252A173E3D001E1DF0 /* HomeVM.swift */,
+				EA711E1F2A25E3450080C0A3 /* EditVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -104,8 +112,11 @@
 		EA227D262A15F2CC0006E74B /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				EA711E172A25BBEE0080C0A3 /* CustomVM.swift */,
 				EA227D242A15F2770006E74B /* CustomVC.swift */,
+				EABCFB4F2A2345E3008BFAE9 /* ReuseIdentifiable.swift */,
 				EA227D272A15FA6D0006E74B /* TodoCell.swift */,
+				EA711E1D2A25E14E0080C0A3 /* CustomFunctions.swift */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -129,7 +140,6 @@
 		EA23A53A2A155760002894F2 /* WhatTodoApp */ = {
 			isa = PBXGroup;
 			children = (
-				EA7376AC2A24AD2000C300EA /* Test */,
 				EAF7F52E2A16247400BD9A15 /* DataSource */,
 				EA227D262A15F2CC0006E74B /* Custom */,
 				EA227D232A15DF140006E74B /* ViewModel */,
@@ -150,18 +160,9 @@
 			children = (
 				EA23A5562A155CD6002894F2 /* Preview+Ext.swift */,
 				EA23A5582A1561F3002894F2 /* UIColor+Ext.swift */,
-				EABCFB4F2A2345E3008BFAE9 /* ReuseIdentifiable.swift */,
-				EA7376AA2A24A88600C300EA /* UITableView+Rx+Ext.swift */,
+				EA711E192A25D3330080C0A3 /* UIScrollView+Rx+Ext.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		EA7376AC2A24AD2000C300EA /* Test */ = {
-			isa = PBXGroup;
-			children = (
-				EA7376AD2A24AD3300C300EA /* Example.swift */,
-			);
-			path = Test;
 			sourceTree = "<group>";
 		};
 		EAF7F52E2A16247400BD9A15 /* DataSource */ = {
@@ -258,20 +259,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA711E202A25E3450080C0A3 /* EditVM.swift in Sources */,
 				EA23A55B2A156E38002894F2 /* AddVC.swift in Sources */,
+				EA711E1E2A25E14E0080C0A3 /* CustomFunctions.swift in Sources */,
 				EABCFB502A2345E3008BFAE9 /* ReuseIdentifiable.swift in Sources */,
+				EA711E1A2A25D3330080C0A3 /* UIScrollView+Rx+Ext.swift in Sources */,
 				EA227D1A2A15DEBB0006E74B /* TodoAPI.swift in Sources */,
 				EA23A5402A155760002894F2 /* HomeVC.swift in Sources */,
-				EA7376AE2A24AD3300C300EA /* Example.swift in Sources */,
 				EA23A53C2A155760002894F2 /* AppDelegate.swift in Sources */,
 				EA23A5592A1561F3002894F2 /* UIColor+Ext.swift in Sources */,
 				EA227D282A15FA6D0006E74B /* TodoCell.swift in Sources */,
+				EA711E182A25BBEE0080C0A3 /* CustomVM.swift in Sources */,
 				EAAA8E262A173E3D001E1DF0 /* HomeVM.swift in Sources */,
+				EA711E1C2A25DAF40080C0A3 /* EditVC.swift in Sources */,
 				EAAA8E242A173C34001E1DF0 /* TodosResponse.swift in Sources */,
 				EA23A5572A155CD6002894F2 /* Preview+Ext.swift in Sources */,
 				EA227D252A15F2770006E74B /* CustomVC.swift in Sources */,
 				EAF7F5302A16248500BD9A15 /* DummyData.swift in Sources */,
-				EA7376AB2A24A88600C300EA /* UITableView+Rx+Ext.swift in Sources */,
 				EA23A53E2A155760002894F2 /* SceneDelegate.swift in Sources */,
 				EA1EC90A2A2213D600E27E7D /* APIError.swift in Sources */,
 				EA1EC90C2A22184C00E27E7D /* ErrorResponse.swift in Sources */,
