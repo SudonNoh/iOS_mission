@@ -54,12 +54,7 @@ class HomeVC: CustomVC {
             .estimatedRowHeight
             .onNext(UITableView.automaticDimension)
         
-        self.todoTableView
-            .rx
-            .itemSelected
-            .subscribe(onNext: { idx in
-                print("클릭되었다. \(idx)")
-            }).disposed(by: disposeBag)
+        
     }
 }
 
@@ -92,8 +87,7 @@ extension HomeVC {
 //
 //    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 //        let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { (action, view, completionHandler) in
-//            self.dataSource.remove(at: indexPath.row)
-//            self.todoTableView.deleteRows(at: [indexPath], with: .automatic)
+//            print("삭제 액션 !!")
 //            completionHandler(true)
 //        }
 //        deleteAction.backgroundColor = .red

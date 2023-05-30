@@ -90,7 +90,7 @@ class TodoCell: UITableViewCell {
         topMarginView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(10)
+            $0.height.equalTo(5)
         }
         
         contentBoxView.snp.makeConstraints {
@@ -103,7 +103,7 @@ class TodoCell: UITableViewCell {
             $0.top.equalTo(contentBoxView.snp.bottom)
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview()
-            $0.height.equalTo(10)
+            $0.height.equalTo(5)
         }
     }
     
