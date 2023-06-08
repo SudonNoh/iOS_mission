@@ -17,7 +17,10 @@ class HomeVM : CustomVM {
     var todoList: BehaviorRelay<[Todo]> = BehaviorRelay<[Todo]>(value: [])
     var errorMsg : PublishRelay<String> = PublishRelay()
     
-    var isLoading : BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)
+    var todo: BehaviorRelay<Todo?> = BehaviorRelay<Todo?>(value: nil)
+    
+    var isLoadingBottom : BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)
+    var isLoadingAction : BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)
     
     var pageInfo : BehaviorRelay<Meta?> = BehaviorRelay<Meta?>(value: nil)
     var notifyHasNextPage : Observable<Bool>
@@ -47,17 +50,17 @@ class HomeVM : CustomVM {
     }
     
     // 데이터 가져오기
-    func fetchTodos(page: Int = 1, orderBy: orderBy = .desc, perPage: Int = 10) {
+    func fetchTodos(page: Int = 1, filterBy: String = "created_at", orderBy: orderBy = .desc, isDone: Bool? = nil, perPage: Int = 10) {
         
-        if self.isLoading.value {
+        if self.isLoadingBottom.value {
             return
         }
         
-        self.isLoading.accept(true)
+        self.isLoadingBottom.accept(true)
         
         Observable.just(())
             .delay(RxTimeInterval.milliseconds(700), scheduler: MainScheduler.instance)
-            .flatMapLatest { TodoAPI.fetchTodos(page, orderBy, perPage) }
+            .flatMapLatest { TodoAPI.fetchTodos(page, filterBy, orderBy, isDone, perPage) }
             .subscribe(onNext: { response in
                 guard let data = response.data,
                       let pageInfo = response.meta else { return }
@@ -72,9 +75,9 @@ class HomeVM : CustomVM {
                 
             }, onError: { Error in
                 self.errorMsg.accept(self.errorHandler(Error))
-                self.isLoading.accept(false)
+                self.isLoadingBottom.accept(false)
             }, onCompleted: {
-                self.isLoading.accept(false)
+                self.isLoadingBottom.accept(false)
             })
             .disposed(by: disposeBag)
     }
@@ -83,7 +86,34 @@ class HomeVM : CustomVM {
     func fetchMoreTodos() {
         guard let pageInfo = self.pageInfo.value,
               pageInfo.hasNext(),
-              !isLoading.value else { return }
+              !isLoadingBottom.value else { return }
         self.fetchTodos(page: currentPage.value + 1)
+    }
+    
+    // 데이터 삭제하기
+    func deleteATodo(id: Int) {
+        if self.isLoadingAction.value {
+            return
+        }
+        
+        self.isLoadingAction.accept(true)
+        
+        TodoAPI.deleteATodo(id: id)
+            .withUnretained(self)
+            .subscribe ( onNext: { _, _ in
+                let _todoList = self.todoList.value.filter { $0.id ?? 0 != id }
+                self.todoList.accept(_todoList)
+            }, onError: { Error in
+                self.errorMsg.accept(self.errorHandler(Error))
+                self.isLoadingAction.accept(false)
+            }, onCompleted: {
+                self.isLoadingAction.accept(false)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    // 데이터 수정하기
+    func updateATodo(id: Int, title: String, isDone: Bool) {
+        
     }
 }

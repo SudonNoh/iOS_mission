@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 class CustomVC : UIViewController {
-    /// Status 상태바의 텍스트 색상을 하얀색으로 바꾸기 위해 추가
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.navigationController?.navigationBar.barStyle = .black
     }
 }
@@ -44,5 +44,15 @@ extension CustomVC {
         alert.addAction(okAction)
         alert.addAction(cancelAction)
         self.present(alert, animated: true)
+    }
+    
+    @objc func showDoneAlert(message: String, completion: (()-> Void)? = nil) {
+        let alert = UIAlertController(title: "Done", message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .default) {(_) in
+            completion?()
+        }
+        
+        alert.addAction(okAction)
+        self.present(alert, animated:true)
     }
 }

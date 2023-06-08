@@ -25,6 +25,12 @@ class EditVC: CustomVC {
         $0.textAlignment = .center
     }
     
+    //MARK: - TextView Edit Error
+    /*
+     TextField 부분에 입력될 때 입력 속도가 맞지 않아 발생하는 거 같다. 확실히 파악하지 못했음.
+     2023-05-31 09:41:45.256793+0900 WhatTodoApp[1796:28520] [Query] Error for queryMetaDataSync: 2
+     2023-05-31 09:41:45.258201+0900 WhatTodoApp[1796:28520] [Query] Error for queryMetaDataSync: 2
+    */
     lazy var titleTextView: UITextView = UITextView().then {
         $0.text = "여섯 글자 이상 입력해주세요."
         $0.textColor = .systemGray
@@ -76,13 +82,16 @@ class EditVC: CustomVC {
         super.viewDidLoad()
         setup()
         
+/* placeHolder를 사용해야 하는 경우 설정
 //        self.titleTextView.rx.didBeginEditing.subscribe(onNext: {
 //            self.titleTextView.text = ""
 //            self.titleTextView.textColor = .textColor
 //        })
 //        .disposed(by: disposeBag)
+*/
         
         self.titleTextView.rx.didEndEditing.subscribe(onNext: {
+            // 글자 수가 모자란 경우
             if self.titleTextView.text.count == 0 {
                 self.titleTextView.text = "여섯 글자 이상 입력해주세요."
                 self.titleTextView.textColor = .systemGray
@@ -108,9 +117,9 @@ extension EditVC {
     func setup() {
         self.view.backgroundColor = .bgColor
         self.navigationController?.navigationBar.tintColor = .white
+        self.navigationController?.navigationBar.topItem?.title = "List"
         
         let safeArea = self.view.safeAreaLayoutGuide.snp
-        
         
         self.view.addSubview(titleTextView)
         self.view.addSubview(countTextLbl)
@@ -139,13 +148,11 @@ extension EditVC {
             $0.bottom.equalTo(safeArea.bottom).inset(15)
         }
 
-
         guard let data = self.data,
               let id = data.id,
               let title = data.title,
               let createDate = data.createdAt,
-              let updateDate = data.updatedAt,
-              let isDone = data.isDone else { return }
+              let updateDate = data.updatedAt else { return }
         
         self.navigationItem.title = "ID : \(id)"
         self.titleTextView.text = title
@@ -158,8 +165,9 @@ extension EditVC {
 }
 
 extension EditVC {
+    /// 글자 수가 5개 이하인 경우 빨간 글씨가 뜨도록 설정
     fileprivate func changeCount() {
-        var count = self.titleTextView.text.count
+        let count = self.titleTextView.text.count
         self.countTextLbl.text = "\(count)/5"
         
         if count > 5 {

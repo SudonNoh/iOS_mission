@@ -35,11 +35,19 @@ class HomeVC: CustomVC {
         $0.backgroundColor = .bgColor
     }
     
-    lazy var loadingIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
+    lazy var bottomIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
         $0.style = .medium
         $0.color = UIColor.systemGray
         $0.startAnimating()
         $0.frame = CGRect(x: 0, y: 0, width: self.todoTableView.bounds.width, height: 44)
+    }
+    
+    lazy var actionIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
+        $0.style = .medium
+        $0.color = UIColor.systemGray
+        $0.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+        $0.center = self.view.center
+        $0.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
     }
     
     lazy var noMoreDataView: UIView = UIView().then {
@@ -62,18 +70,37 @@ class HomeVC: CustomVC {
     var viewModel: HomeVM = HomeVM()
     var disposeBag = DisposeBag()
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.searchBar
+                .searchTextField
+                .attributedPlaceholder = NSAttributedString(string: "검색어를 입력해주세요.",
+                                                            attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+        self.searchBar.searchTextField.leftView?.tintColor = .lightGray
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         self.todoTableView.register(TodoCell.self, forCellReuseIdentifier: TodoCell.reuseIdentifire)
         self.todoTableView.delegate = self
-        
+
         self.viewModel
-            .isLoading
+            .isLoadingBottom
             .withUnretained(self)
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { _, isLoading in
-                self.todoTableView.tableFooterView = isLoading ? self.loadingIndicator : self.noMoreDataView
+            .subscribe(onNext: { _, isLoadingBottom in
+                self.todoTableView.tableFooterView = isLoadingBottom ? self.bottomIndicator : nil
+            })
+            .disposed(by: disposeBag)
+        
+        self.viewModel
+            .isLoadingAction
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { _, isLoadingAction in
+                isLoadingAction ? self.actionIndicator.startAnimating() : self.actionIndicator.stopAnimating()
             })
             .disposed(by: disposeBag)
         
@@ -125,6 +152,7 @@ extension HomeVC {
         
         self.view.addSubview(todoTableView)
         self.view.addSubview(pageInfoLbl)
+        self.view.addSubview(actionIndicator)
         
         let safeArea = self.view.safeAreaLayoutGuide.snp
         
@@ -156,23 +184,30 @@ extension HomeVC: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let completeAction = UIContextualAction(style: .normal, title: "Complete") { (_, _, completionHandler) in
+        
+        guard let isDone = self.viewModel.todoList.value[indexPath.row].isDone else { return UISwipeActionsConfiguration() }
+        
+        let title = isDone ? "미완료" : "완료"
+        
+        let completeAction = UIContextualAction(style: .normal, title: title) { (_, _, completionHandler) in
             print("완료 액션 !!")
             completionHandler(true)
         }
-        completeAction.backgroundColor = .systemGreen
+        completeAction.backgroundColor = isDone ? .systemRed : .systemGreen
         
         return UISwipeActionsConfiguration(actions: [completeAction])
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
-            print("삭제 액션 !!")
+            
+            guard let id = self.viewModel.todoList.value[indexPath.row].id else {return}
             
             self.showDeleteAlert() {
-                completionHandler(true)
+                self.viewModel.deleteATodo(id: id)
             }
-            completionHandler(false)
+            
+            completionHandler(true)
         }
         deleteAction.backgroundColor = .systemRed
 

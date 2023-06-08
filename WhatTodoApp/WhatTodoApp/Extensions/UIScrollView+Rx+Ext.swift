@@ -14,7 +14,7 @@ extension Reactive where Base: UIScrollView {
             let contentYOffset = offset.y
             let distanceFromBottom = self.base.contentSize.height - contentYOffset
             
-            return distanceFromBottom - 100 < height
+            return distanceFromBottom - 200 < height
         }
         .filter { $0 == true }.map { _ in }
     }
