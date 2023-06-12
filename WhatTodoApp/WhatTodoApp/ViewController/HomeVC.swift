@@ -35,6 +35,10 @@ class HomeVC: CustomVC {
         $0.backgroundColor = .bgColor
     }
     
+    // mount.fill - asc / desc
+    // smallcircle.filled.circle -
+    // smallcircle.filled.circle.fill
+    
     lazy var bottomIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
         $0.style = .medium
         $0.color = UIColor.systemGray
@@ -160,7 +164,7 @@ extension HomeVC {
             $0.top.equalTo(safeArea.top).offset(5)
             $0.centerX.equalTo(safeArea.centerX)
         }
-        
+
         todoTableView.snp.makeConstraints {
             $0.top.equalTo(pageInfoLbl.snp.bottom).offset(10)
             $0.bottom.equalTo(safeArea.bottom).inset(20)
@@ -187,10 +191,17 @@ extension HomeVC: UITableViewDelegate {
         
         guard let isDone = self.viewModel.todoList.value[indexPath.row].isDone else { return UISwipeActionsConfiguration() }
         
-        let title = isDone ? "미완료" : "완료"
+        let btnTitle = isDone ? "미완료" : "완료"
         
-        let completeAction = UIContextualAction(style: .normal, title: title) { (_, _, completionHandler) in
-            print("완료 액션 !!")
+        let completeAction = UIContextualAction(style: .normal, title: btnTitle) { (_, _, completionHandler) in
+            
+            guard let id = self.viewModel.todoList.value[indexPath.row].id,
+                  let title = self.viewModel.todoList.value[indexPath.row].title else {return}
+            
+            let updatedIsDone: Bool = isDone ? false : true
+            
+            self.viewModel.updateATodo(id: id, title: title, isDone: updatedIsDone)
+            
             completionHandler(true)
         }
         completeAction.backgroundColor = isDone ? .systemRed : .systemGreen
@@ -199,7 +210,7 @@ extension HomeVC: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
+        let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { (action, view, completionHandler) in
             
             guard let id = self.viewModel.todoList.value[indexPath.row].id else {return}
             

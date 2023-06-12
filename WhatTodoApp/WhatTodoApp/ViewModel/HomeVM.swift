@@ -114,6 +114,32 @@ class HomeVM : CustomVM {
     
     // 데이터 수정하기
     func updateATodo(id: Int, title: String, isDone: Bool) {
+        if self.isLoadingAction.value {
+            return
+        }
         
+        self.isLoadingAction.accept(true)
+        
+        TodoAPI.updateATodo(id: id, title: title, isDone: isDone)
+            .withUnretained(self)
+            .subscribe ( onNext: { (HomeVM, TodoResponse) in
+                var _todoList = self.todoList.value
+                //MARK: - 업데이트 방식, TodoResponse에 있는 isDone, title, updatedAt을 var로 변경
+                guard let data = TodoResponse.data,
+                      let id = data.id,
+                      let idx = _todoList.firstIndex(where: { $0.id == id }) else { return }
+                
+                _todoList[idx].isDone = data.isDone
+                _todoList[idx].title = data.title
+                _todoList[idx].updatedAt = data.updatedAt
+                
+                self.todoList.accept(_todoList)
+            }, onError: { Error in
+                self.errorMsg.accept(self.errorHandler(Error))
+                self.isLoadingAction.accept(false)
+            }, onCompleted: {
+                self.isLoadingAction.accept(false)
+            })
+            .disposed(by: disposeBag)
     }
 }

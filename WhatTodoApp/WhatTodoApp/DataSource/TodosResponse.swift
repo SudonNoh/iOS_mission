@@ -22,9 +22,10 @@ struct TodoResponse: Codable {
 // MARK: - Todo
 struct Todo: Codable {
     let id: Int?
-    let title: String?
-    let isDone: Bool?
-    let createdAt, updatedAt: String?
+    var title: String?
+    var isDone: Bool?
+    let createdAt: String?
+    var updatedAt: String?
 
     enum CodingKeys: String, CodingKey {
         case id, title

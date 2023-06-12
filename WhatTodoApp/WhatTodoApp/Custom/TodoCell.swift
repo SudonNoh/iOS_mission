@@ -107,7 +107,8 @@ class TodoCell: UITableViewCell {
     func updateUI(_ data: Todo) {
         guard let title = data.title,
               let updateDate = data.updatedAt,
-              let createDate = data.createdAt else {return}
+              let createDate = data.createdAt,
+              let isDone = data.isDone else {return}
         
         let updateAt = dateFormatter(frontString: "update:", date: updateDate)
         let createAt = dateFormatter(frontString: "create:", date: createDate)
@@ -115,6 +116,12 @@ class TodoCell: UITableViewCell {
         self.titleLabel.text = title
         self.updatedDateLabel.text = updateAt
         self.createdDateLabel.text = createAt
+        
+        let labelColor: UIColor = isDone ? .lightGray : .textColor ?? .white
+        
+        self.titleLabel.textColor = labelColor
+        self.updatedDateLabel.textColor = labelColor
+        self.createdDateLabel.textColor = labelColor
     }
 }
 
