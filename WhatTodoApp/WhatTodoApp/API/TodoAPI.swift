@@ -9,9 +9,9 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-public enum orderBy: Int {
-    case desc = 0
-    case asc = 1
+public enum OrderBy {
+    case desc
+    case asc
 }
 
 enum TodoAPI {
@@ -23,7 +23,7 @@ enum TodoAPI {
 
     static func fetchTodos(_ page:Int = 1,
                            _ filterBy: String = "created_at",
-                           _ orderBy: orderBy = .desc,
+                           _ orderBy: OrderBy = .desc,
                            _ isDone: Bool? = nil,
                            _ perPage: Int = 10) -> Observable<TodoListResponse> {
         

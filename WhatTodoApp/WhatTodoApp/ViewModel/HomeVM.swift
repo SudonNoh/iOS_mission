@@ -28,6 +28,9 @@ class HomeVM : CustomVM {
     var currentPage : BehaviorRelay<Int> = BehaviorRelay<Int>(value: 1)
     var currentPageInfo : Observable<String>
     
+    var orderByStatus: OrderBy = .desc
+    var isDoneStatus: Bool? = true
+    
     override init() {
         self.notifyHasNextPage = pageInfo.skip(1).map { $0?.hasNext() ?? true  }
         self.currentPageInfo = currentPage.map { "\($0)" }
@@ -50,7 +53,7 @@ class HomeVM : CustomVM {
     }
     
     // 데이터 가져오기
-    func fetchTodos(page: Int = 1, filterBy: String = "created_at", orderBy: orderBy = .desc, isDone: Bool? = nil, perPage: Int = 10) {
+    func fetchTodos(page: Int = 1, filterBy: String = "created_at", orderBy: OrderBy = .desc, isDone: Bool? = nil, perPage: Int = 10) {
         
         if self.isLoadingBottom.value {
             return
@@ -87,7 +90,8 @@ class HomeVM : CustomVM {
         guard let pageInfo = self.pageInfo.value,
               pageInfo.hasNext(),
               !isLoadingBottom.value else { return }
-        self.fetchTodos(page: currentPage.value + 1)
+        
+        self.fetchTodos(page: currentPage.value + 1, orderBy: orderByStatus, isDone: isDoneStatus)
     }
     
     // 데이터 삭제하기

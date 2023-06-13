@@ -35,9 +35,36 @@ class HomeVC: CustomVC {
         $0.backgroundColor = .bgColor
     }
     
-    // mount.fill - asc / desc
-    // smallcircle.filled.circle -
-    // smallcircle.filled.circle.fill
+    lazy var orderByBtn : UIButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "arrowtriangle.down.square.fill"), for: .normal)
+        $0.tintColor = .textColor
+    }
+    
+    lazy var isDoneBtn : UIStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.spacing = 10
+        $0.alignment = .center
+        $0.distribution = .fillEqually
+        
+        $0.addArrangedSubview(showAllBtn)
+        $0.addArrangedSubview(showCompletedBtn)
+        $0.addArrangedSubview(showNotCompletedBtn)
+    }
+    
+    lazy var showAllBtn : UIButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "smallcircle.filled.circle.fill"), for: .normal)
+        $0.tintColor = .white
+    }
+    
+    lazy var showCompletedBtn : UIButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "smallcircle.filled.circle"), for: .normal)
+        $0.tintColor = .systemGreen
+    }
+    
+    lazy var showNotCompletedBtn : UIButton = UIButton().then {
+        $0.setImage(UIImage(systemName: "smallcircle.filled.circle"), for: .normal)
+        $0.tintColor = .systemRed
+    }
     
     lazy var bottomIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
         $0.style = .medium
@@ -144,6 +171,22 @@ class HomeVC: CustomVC {
             .map { !$0 ? self.noMoreDataView : nil }
             .bind(to: self.todoTableView.rx.tableFooterView)
             .disposed(by: disposeBag)
+        
+        self.orderByBtn.rx.tap
+            .bind { self.orderByFucntion() }
+            .disposed(by: disposeBag)
+        
+        self.showAllBtn.rx.tap
+            .bind { self.isDoneBtnActions(selected: nil) }
+            .disposed(by: disposeBag)
+        
+        self.showCompletedBtn.rx.tap
+            .bind { self.isDoneBtnActions(selected: true) }
+            .disposed(by: disposeBag)
+        
+        self.showNotCompletedBtn.rx.tap
+            .bind { self.isDoneBtnActions(selected: false) }
+            .disposed(by: disposeBag)
     }
 }
 
@@ -155,7 +198,9 @@ extension HomeVC {
         self.navigationItem.titleView = searchBar
         
         self.view.addSubview(todoTableView)
+        self.view.addSubview(orderByBtn)
         self.view.addSubview(pageInfoLbl)
+        self.view.addSubview(isDoneBtn)
         self.view.addSubview(actionIndicator)
         
         let safeArea = self.view.safeAreaLayoutGuide.snp
@@ -163,6 +208,20 @@ extension HomeVC {
         pageInfoLbl.snp.makeConstraints {
             $0.top.equalTo(safeArea.top).offset(5)
             $0.centerX.equalTo(safeArea.centerX)
+        }
+        
+        orderByBtn.snp.makeConstraints {
+            $0.top.equalTo(pageInfoLbl.snp.top)
+            $0.leading.equalTo(safeArea.leading).offset(20)
+            $0.trailing.lessThanOrEqualTo(pageInfoLbl.snp.leading)
+            $0.bottom.equalTo(pageInfoLbl.snp.bottom)
+        }
+        
+        isDoneBtn.snp.makeConstraints {
+            $0.top.equalTo(pageInfoLbl.snp.top)
+            $0.leading.greaterThanOrEqualTo(pageInfoLbl.snp.trailing)
+            $0.trailing.equalTo(safeArea.trailing).inset(20)
+            $0.bottom.equalTo(pageInfoLbl.snp.bottom)
         }
 
         todoTableView.snp.makeConstraints {
@@ -173,7 +232,7 @@ extension HomeVC {
     }
 }
 
-
+// TableView Delegate
 extension HomeVC: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -223,5 +282,36 @@ extension HomeVC: UITableViewDelegate {
         deleteAction.backgroundColor = .systemRed
 
         return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+}
+
+// Button Function
+extension HomeVC {
+    func orderByFucntion() {
+        //MARK: - orderByStatus 관련
+        // viewModel에 선언한 변수를 가져와서 변경해주었는데, 이런 식으로 구현해도 되는가?
+        // image 변경 다른 방법이 있는가?
+        if self.viewModel.orderByStatus == .desc {
+            self.viewModel.orderByStatus = .asc
+            self.orderByBtn.rx.image().onNext(UIImage(systemName: "arrowtriangle.up.square.fill"))
+        } else {
+            self.viewModel.orderByStatus = .desc
+            self.orderByBtn.rx.image().onNext(UIImage(systemName: "arrowtriangle.down.square.fill"))
+        }
+        // VM에서 안하고 여기서 이런 식으로 처리해도 되는지?
+        self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus)
+    }
+    
+    /// 선택된 버튼의 액션을 지정한다.
+    /// - Parameter selected: 선택된 버튼의 번호를 받는다.
+    func isDoneBtnActions(selected: Bool?) {
+        
+        self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus,
+                                  isDone: self.viewModel.isDoneStatus)
+    }
+    
+    func statusIcon(fillBtn: UIButton, emptyBtn: UIButton) {
+        fillBtn.rx.image().onNext(UIImage(systemName: "smallcircle.filled.circle.fill"))
+        emptyBtn.rx.image().onNext(UIImage(systemName: "smallcircle.filled.circle"))
     }
 }
