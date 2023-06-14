@@ -16,6 +16,11 @@ import Then
 
 class EditVC: CustomVC {
     
+    //MARK: - 리스트 업데이트를 Delegate를 활용해서 업데이트 여부를 보냈는데, 이런 방식으로 처리하는 것이 맞는지 궁금
+    // Delegate 방식 외에 다른 방식이 있는지 궁금
+    // SendDataDelegate
+    weak var delegate: SendDataDelegate?
+    
     var data: Todo? = nil
     
     lazy var countTextLbl: UILabel = UILabel().then {
@@ -67,50 +72,77 @@ class EditVC: CustomVC {
         $0.textAlignment = .center
     }
     
+    lazy var actionIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
+        $0.style = .medium
+        $0.color = UIColor.systemGray
+        $0.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height)
+        $0.center = self.view.center
+        $0.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
+    }
+    
     lazy var saveBtn: UIButton = UIButton().then {
         $0.setTitle("Save", for: .normal)
         $0.setTitleColor(.textPoint, for: .normal)
+        $0.setTitleColor(.systemRed, for: .disabled)
+        $0.setTitleColor(.systemGreen, for: .selected)
         $0.backgroundColor = .bgColor
         $0.layer.cornerRadius = 5
         $0.layer.borderColor = UIColor.textPoint?.cgColor
         $0.layer.borderWidth = 1
     }
     
+    var viewModel = EditVM()
     var disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         setup()
         
-/* placeHolder를 사용해야 하는 경우 설정
-//        self.titleTextView.rx.didBeginEditing.subscribe(onNext: {
-//            self.titleTextView.text = ""
-//            self.titleTextView.textColor = .textColor
-//        })
-//        .disposed(by: disposeBag)
-*/
-        
-        self.titleTextView.rx.didEndEditing.subscribe(onNext: {
-            // 글자 수가 모자란 경우
-            if self.titleTextView.text.count == 0 {
-                self.titleTextView.text = "여섯 글자 이상 입력해주세요."
-                self.titleTextView.textColor = .systemGray
+        self.titleTextView.rx
+            .didChange
+            .bind {
+                changeCount(textView: self.titleTextView,
+                            textLabel: self.countTextLbl,
+                            button: self.saveBtn)
             }
-        })
-        .disposed(by: disposeBag)
+            .disposed(by: disposeBag)
         
-        self.titleTextView.rx.didChange.subscribe(onNext: {
-            self.changeCount()
-        })
-        .disposed(by: disposeBag)
+        self.saveBtn.rx
+            .tap
+            .bind {self.updateATodo()}
+            .disposed(by: disposeBag)
         
-        self.saveBtn.rx.tap.subscribe(onNext: {
-            self.saveBtn.backgroundColor = .white
-            self.saveBtn.setTitleColor(.black, for: .normal)
-        })
-        .disposed(by: disposeBag)
+        self.viewModel
+            .todo
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .bind { (VC, todo) in self.showDoneAlert() {
+                // SendDataDelegate
+                guard let delegate = self.delegate else {return}
+                delegate.refreshList(true)
+                self.navigationController?.popViewController(animated: true)
+            } }
+            .disposed(by: disposeBag)
+        
+        self.viewModel
+            .errorMsg
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { VC, msg in
+                VC.showErrorAlert(errMsg: msg)
+                self.titleTextView.isEditable = true
+            }).disposed(by: disposeBag)
+        
+        self.viewModel
+            .isLoadingAction
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { _, isLoadingAction in
+                isLoadingAction ? self.actionIndicator.startAnimating() : self.actionIndicator.stopAnimating()
+            })
+            .disposed(by: disposeBag)
     }
-    
 }
 
 extension EditVC {
@@ -125,6 +157,7 @@ extension EditVC {
         self.view.addSubview(countTextLbl)
         self.view.addSubview(dateStackView)
         self.view.addSubview(saveBtn)
+        self.view.addSubview(actionIndicator)
 
         titleTextView.snp.makeConstraints {
             $0.top.equalTo(safeArea.top)
@@ -160,20 +193,55 @@ extension EditVC {
         self.updateDateLbl.text = dateFormatter(frontString: "Update:", date: updateDate)
         self.createDateLbl.text = dateFormatter(frontString: "Create:", date: createDate)
         
-        self.changeCount()
+        changeCount(textView: self.titleTextView,
+                    textLabel: self.countTextLbl,
+                    button: self.saveBtn)
     }
 }
 
+// button Actions
 extension EditVC {
-    /// 글자 수가 5개 이하인 경우 빨간 글씨가 뜨도록 설정
-    fileprivate func changeCount() {
-        let count = self.titleTextView.text.count
-        self.countTextLbl.text = "\(count)/5"
-        
-        if count > 5 {
-            self.countTextLbl.textColor = .green
-        } else {
-            self.countTextLbl.textColor = .red
-        }
+    func updateATodo() {
+        self.saveBtn.isSelected = true
+        self.showSaveAlert(completion: {
+            
+            self.titleTextView.isEditable = false
+            
+            guard let data = self.data,
+                  let id = data.id,
+                  let isDone = data.isDone,
+                  let title = self.titleTextView.text else { return }
+            
+            self.viewModel.updateATodo(id: id, title: title, isDone: isDone)
+            
+            self.saveBtn.isSelected = false
+            self.titleTextView.isEditable = true
+
+        }, cancelCompletion: {self.saveBtn.isSelected = false})
     }
 }
+
+// SendDataDelegate
+protocol SendDataDelegate: AnyObject {
+    func refreshList(_ bool: Bool)
+}
+
+
+/* placeHolder를 사용해야 하는 경우 설정
+        self.titleTextView.rx.didBeginEditing.subscribe(onNext: {
+            self.titleTextView.text = ""
+            self.titleTextView.textColor = .textColor
+        })
+        .disposed(by: disposeBag)
+ 
+         self.titleTextView.rx
+             .didEndEditing
+             .subscribe(onNext: {
+                 // 글자 수가 모자란 경우
+                 if self.titleTextView.text.count == 0 {
+                     self.titleTextView.text = "여섯 글자 이상 입력해주세요."
+                     self.titleTextView.textColor = .systemGray
+                 }
+             })
+             .disposed(by: disposeBag)
+*/

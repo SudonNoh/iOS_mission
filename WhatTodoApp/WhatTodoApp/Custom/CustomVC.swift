@@ -34,8 +34,8 @@ extension CustomVC {
         self.present(alert, animated: true)
     }
     
-    @objc func showCompleteAlert(completion: (() -> Void)? = nil){
-        let alert = UIAlertController(title: "완료", message: "정말로 완료하시겠습니까?", preferredStyle: .alert)
+    @objc func showCompleteAlert(message: String, completion: (() -> Void)? = nil){
+        let alert = UIAlertController(title: "저장", message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "네", style: .default) {(_) in
             completion?()
         }
@@ -46,12 +46,25 @@ extension CustomVC {
         self.present(alert, animated: true)
     }
     
-    @objc func showDoneAlert(message: String, completion: (()-> Void)? = nil) {
-        let alert = UIAlertController(title: "Done", message: message, preferredStyle: .alert)
+    @objc func showSaveAlert(completion: (()-> Void)? = nil, cancelCompletion: (()->Void)? = nil) {
+        let alert = UIAlertController(title: "저장", message: "저장하시겠습니까?", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "저장", style: .default) {(_) in
+            completion?()
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel) {(_) in
+            cancelCompletion?()
+        }
+        
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        self.present(alert, animated:true)
+    }
+    
+    @objc func showDoneAlert(completion: (() -> Void)? = nil) {
+        let alert = UIAlertController(title: "완료", message: "저장되었습니다.", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "확인", style: .default) {(_) in
             completion?()
         }
-        
         alert.addAction(okAction)
         self.present(alert, animated:true)
     }

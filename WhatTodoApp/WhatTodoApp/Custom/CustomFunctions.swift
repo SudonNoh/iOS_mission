@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+
 
 /// Change Date Format String To String with Custom String
 /// - Parameters:
@@ -26,4 +28,17 @@ public func dateFormatter(frontString: String, date: String) -> String {
     let stringDate = dateFormatter.string(from: confirmDate)
     
     return frontString + " " + stringDate
+}
+
+public func changeCount(textView: UITextView, textLabel:UILabel, button: UIButton) {
+    let count = textView.text.count
+    textLabel.text = "\(count)/5"
+    
+    if count > 5 {
+        textLabel.textColor = .green
+        button.isEnabled = true
+    } else {
+        textLabel.textColor = .red
+        button.isEnabled = false
+    }
 }

@@ -24,47 +24,46 @@ class HomeVC: CustomVC {
         $0.layer.shadowRadius = 5.0
         $0.layer.shadowOpacity = 3.0
     }
-    
     lazy var pageInfoLbl : UILabel = UILabel().then {
         $0.text = "0"
         $0.textColor = .textPoint
         $0.font = UIFont.boldSystemFont(ofSize: 12)
     }
-    
     lazy var todoTableView : UITableView = UITableView().then {
         $0.backgroundColor = .bgColor
     }
-    
     lazy var orderByBtn : UIButton = UIButton().then {
         $0.setImage(UIImage(systemName: "arrowtriangle.down.square.fill"), for: .normal)
         $0.tintColor = .textColor
     }
-    
     lazy var isDoneBtn : UIStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 10
         $0.alignment = .center
         $0.distribution = .fillEqually
         
-        $0.addArrangedSubview(showAllBtn)
         $0.addArrangedSubview(showCompletedBtn)
         $0.addArrangedSubview(showNotCompletedBtn)
     }
-    
-    lazy var showAllBtn : UIButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "smallcircle.filled.circle.fill"), for: .normal)
-        $0.tintColor = .white
-    }
-    
     lazy var showCompletedBtn : UIButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "smallcircle.filled.circle"), for: .normal)
+        $0.setImage(UIImage(systemName: "smallcircle.filled.circle.fill"), for: .normal)
         $0.tintColor = .systemGreen
     }
-    
     lazy var showNotCompletedBtn : UIButton = UIButton().then {
-        $0.setImage(UIImage(systemName: "smallcircle.filled.circle"), for: .normal)
+        $0.setImage(UIImage(systemName: "smallcircle.filled.circle.fill"), for: .normal)
         $0.tintColor = .systemRed
     }
+    var addBtnSize: CGFloat = 60
+    lazy var addBtn : UIButton = UIButton().then {
+        $0.setBackgroundImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
+        $0.tintColor = .textPoint
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = addBtnSize/2
+    }
+    
+    var completedBtnOn: Bool = true
+    var notCompltedBtnOn: Bool = true
+    var isUpdated: Bool = false
     
     lazy var bottomIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
         $0.style = .medium
@@ -72,7 +71,6 @@ class HomeVC: CustomVC {
         $0.startAnimating()
         $0.frame = CGRect(x: 0, y: 0, width: self.todoTableView.bounds.width, height: 44)
     }
-    
     lazy var actionIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
         $0.style = .medium
         $0.color = UIColor.systemGray
@@ -101,18 +99,9 @@ class HomeVC: CustomVC {
     var viewModel: HomeVM = HomeVM()
     var disposeBag = DisposeBag()
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        self.searchBar
-                .searchTextField
-                .attributedPlaceholder = NSAttributedString(string: "검색어를 입력해주세요.",
-                                                            attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
-        self.searchBar.searchTextField.leftView?.tintColor = .lightGray
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setup()
         self.todoTableView.register(TodoCell.self, forCellReuseIdentifier: TodoCell.reuseIdentifire)
         self.todoTableView.delegate = self
@@ -165,6 +154,29 @@ class HomeVC: CustomVC {
             .bind(onNext: { self.viewModel.fetchMoreTodos() })
             .disposed(by: disposeBag)
         
+        //MARK: - tableView dragging 관련
+        self.todoTableView
+            .rx
+            .willBeginDragging
+            .bind { _ in self.addBtn.isHidden = true }
+            .disposed(by: disposeBag)
+        
+        self.todoTableView
+            .rx
+            .didEndDragging
+            .debounce(RxTimeInterval.milliseconds(600), scheduler: MainScheduler.instance)
+            .bind { _ in self.addBtn.isHidden = false }
+            .disposed(by: disposeBag)
+        
+        self.addBtn
+            .rx
+            .tap
+            .bind {
+                let vc = AddVC()
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+            .disposed(by: disposeBag)
+        
         self.viewModel
             .notifyHasNextPage
             .observe(on: MainScheduler.instance)
@@ -176,17 +188,30 @@ class HomeVC: CustomVC {
             .bind { self.orderByFucntion() }
             .disposed(by: disposeBag)
         
-        self.showAllBtn.rx.tap
-            .bind { self.isDoneBtnActions(selected: nil) }
-            .disposed(by: disposeBag)
-        
         self.showCompletedBtn.rx.tap
-            .bind { self.isDoneBtnActions(selected: true) }
+            .bind { self.isDoneBtnActions(btn: 1) }
             .disposed(by: disposeBag)
         
         self.showNotCompletedBtn.rx.tap
-            .bind { self.isDoneBtnActions(selected: false) }
+            .bind { self.isDoneBtnActions(btn: 2) }
             .disposed(by: disposeBag)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if self.isUpdated {
+            self.viewModel.refreshTodos()
+            self.isUpdated = false
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.searchBar
+                .searchTextField
+                .attributedPlaceholder = NSAttributedString(string: "검색어를 입력해주세요.",
+                                                            attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+        self.searchBar.searchTextField.leftView?.tintColor = .lightGray
     }
 }
 
@@ -202,6 +227,7 @@ extension HomeVC {
         self.view.addSubview(pageInfoLbl)
         self.view.addSubview(isDoneBtn)
         self.view.addSubview(actionIndicator)
+        self.view.addSubview(addBtn)
         
         let safeArea = self.view.safeAreaLayoutGuide.snp
         
@@ -229,24 +255,36 @@ extension HomeVC {
             $0.bottom.equalTo(safeArea.bottom).inset(20)
             $0.horizontalEdges.equalTo(safeArea.horizontalEdges).inset(15)
         }
+        
+        addBtn.snp.makeConstraints {
+            $0.bottom.equalTo(safeArea.bottom).inset(100)
+            $0.trailing.equalTo(safeArea.trailing).inset(60)
+            $0.width.equalTo(addBtnSize)
+            $0.height.equalTo(addBtnSize)
+        }
     }
 }
 
 // TableView Delegate
 extension HomeVC: UITableViewDelegate {
 
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView,
+                   estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
         let vc = EditVC()
         let eachData = self.viewModel.todoList.value[indexPath.row]
         vc.data = eachData
+        // SendDataDelegate
+        vc.delegate = self
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    func tableView(_ tableView: UITableView,
+                   leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         guard let isDone = self.viewModel.todoList.value[indexPath.row].isDone else { return UISwipeActionsConfiguration() }
         
@@ -254,13 +292,16 @@ extension HomeVC: UITableViewDelegate {
         
         let completeAction = UIContextualAction(style: .normal, title: btnTitle) { (_, _, completionHandler) in
             
-            guard let id = self.viewModel.todoList.value[indexPath.row].id,
-                  let title = self.viewModel.todoList.value[indexPath.row].title else {return}
+            let comment = isDone ? "완료 처리 하시겠습니까?" : "미완료 처리 하시겠습니까?"
             
-            let updatedIsDone: Bool = isDone ? false : true
-            
-            self.viewModel.updateATodo(id: id, title: title, isDone: updatedIsDone)
-            
+            self.showCompleteAlert(message: comment) {
+                guard let id = self.viewModel.todoList.value[indexPath.row].id,
+                      let title = self.viewModel.todoList.value[indexPath.row].title else {return}
+                
+                let updatedIsDone: Bool = isDone ? false : true
+                
+                self.viewModel.updateATodo(id: id, title: title, isDone: updatedIsDone)
+            }
             completionHandler(true)
         }
         completeAction.backgroundColor = isDone ? .systemRed : .systemGreen
@@ -299,19 +340,44 @@ extension HomeVC {
             self.orderByBtn.rx.image().onNext(UIImage(systemName: "arrowtriangle.down.square.fill"))
         }
         // VM에서 안하고 여기서 이런 식으로 처리해도 되는지?
-        self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus)
+        self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus,
+                                  isDone: self.viewModel.isDoneStatus)
     }
     
-    /// 선택된 버튼의 액션을 지정한다.
-    /// - Parameter selected: 선택된 버튼의 번호를 받는다.
-    func isDoneBtnActions(selected: Bool?) {
+    func isDoneBtnActions(btn: Int) {
+        
+        if btn == 1 {
+            self.completedBtnOn = self.completedBtnOn ? false : true
+            statusIcon(status: self.completedBtnOn, btn: self.showCompletedBtn)
+        } else {
+            self.notCompltedBtnOn = self.notCompltedBtnOn ? false : true
+            statusIcon(status: self.notCompltedBtnOn, btn: self.showNotCompletedBtn)
+        }
+        
+        //MARK: - if문을 줄일 수 있는 방법?
+        if (self.completedBtnOn&&self.notCompltedBtnOn == true) {
+            self.viewModel.isDoneStatus = nil
+        } else if self.completedBtnOn == true {
+            self.viewModel.isDoneStatus = true
+        } else if self.notCompltedBtnOn == true {
+            self.viewModel.isDoneStatus = false
+        } else {
+            self.viewModel.isDoneStatus = nil
+        }
         
         self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus,
                                   isDone: self.viewModel.isDoneStatus)
     }
     
-    func statusIcon(fillBtn: UIButton, emptyBtn: UIButton) {
-        fillBtn.rx.image().onNext(UIImage(systemName: "smallcircle.filled.circle.fill"))
-        emptyBtn.rx.image().onNext(UIImage(systemName: "smallcircle.filled.circle"))
+    func statusIcon(status: Bool, btn: UIButton) {
+        let string = status ? ".fill":""
+        btn.rx.image().onNext(UIImage(systemName: "smallcircle.filled.circle\(string)"))
+    }
+}
+
+// SendDataDelegate
+extension HomeVC: SendDataDelegate {
+    func refreshList(_ bool: Bool) {
+        self.isUpdated = true
     }
 }

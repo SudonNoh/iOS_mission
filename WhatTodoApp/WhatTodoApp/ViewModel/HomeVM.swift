@@ -29,7 +29,7 @@ class HomeVM : CustomVM {
     var currentPageInfo : Observable<String>
     
     var orderByStatus: OrderBy = .desc
-    var isDoneStatus: Bool? = true
+    var isDoneStatus: Bool? = nil
     
     override init() {
         self.notifyHasNextPage = pageInfo.skip(1).map { $0?.hasNext() ?? true  }
@@ -54,7 +54,7 @@ class HomeVM : CustomVM {
     
     // 데이터 가져오기
     func fetchTodos(page: Int = 1, filterBy: String = "created_at", orderBy: OrderBy = .desc, isDone: Bool? = nil, perPage: Int = 10) {
-        
+
         if self.isLoadingBottom.value {
             return
         }
@@ -138,6 +138,7 @@ class HomeVM : CustomVM {
                 _todoList[idx].updatedAt = data.updatedAt
                 
                 self.todoList.accept(_todoList)
+                self.todo.accept(data)
             }, onError: { Error in
                 self.errorMsg.accept(self.errorHandler(Error))
                 self.isLoadingAction.accept(false)
@@ -145,5 +146,10 @@ class HomeVM : CustomVM {
                 self.isLoadingAction.accept(false)
             })
             .disposed(by: disposeBag)
+    }
+    
+    // 데이터 새로고침
+    func refreshTodos() {
+        self.fetchTodos(page: 1, orderBy: orderByStatus, isDone: isDoneStatus)
     }
 }
