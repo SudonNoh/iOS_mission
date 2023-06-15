@@ -20,7 +20,7 @@ enum TodoAPI {
     static let baseURL = "https://phplaravel-574671-2962113.cloudwaysapps.com/api/" + version
     
     static let session = URLSession.shared
-
+    
     static func fetchTodos(_ page:Int = 1,
                            _ filterBy: String = "created_at",
                            _ orderBy: OrderBy = .desc,
@@ -28,7 +28,7 @@ enum TodoAPI {
                            _ perPage: Int = 10) -> Observable<TodoListResponse> {
         
         var isDoneUrl = ""
-
+        
         if let boolValue = isDone { isDoneUrl = "&is_done=\(boolValue)" }
         
         let urlString = baseURL + "/todos" + "?page=\(page)&filter=\(filterBy)&order_by=\(orderBy)\(isDoneUrl)&per_page=\(perPage)"
@@ -78,7 +78,7 @@ enum TodoAPI {
     }
     
     static func deleteATodo(id: Int) -> Observable<TodoResponse> {
-
+        
         let urlString = baseURL + "/todos/\(id)"
         
         guard let url = URL(string: urlString) else { return Observable.error(APIError.notAllowedUrl) }
@@ -130,6 +130,51 @@ enum TodoAPI {
         return session
             .rx
             .response(request: urlRequest)
+            .map { (urlResponse: HTTPURLResponse, data: Data) -> Data in
+                
+                switch urlResponse.statusCode {
+                case 401: throw APIError.unauthorized
+                case 404: throw APIError.noContent
+                default: break
+                }
+                
+                return data
+            }
+            .decode(type: TodoResponse.self, decoder: JSONDecoder())
+            .catch { err in
+                
+                if let error = err as? APIError { throw error }
+                if let _ = err as? DecodingError { throw APIError.decodingError }
+                
+                throw APIError.unknown(err)
+            }
+    }
+    
+    static func addATodo(title: String, isDone: Bool) -> Observable<TodoResponse> {
+        print("실행된다 !")
+        let urlString = baseURL + "/todos"
+        
+        guard let url = URL(string: urlString) else { return Observable.error(APIError.notAllowedUrl)}
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.addValue("application/json", forHTTPHeaderField: "accept")
+        urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let requestParams : [String:Any] = ["title":title, "is_done":"\(isDone)"]
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: requestParams, options: [.prettyPrinted])
+            urlRequest.httpBody = jsonData
+        } catch {
+            return Observable.error(APIError.jsonEncodingError)
+        }
+        
+        print(1)
+        return session
+            .rx
+            .response(request: urlRequest)
+            .debug("♥️")
             .map { (urlResponse: HTTPURLResponse, data: Data) -> Data in
                 
                 switch urlResponse.statusCode {

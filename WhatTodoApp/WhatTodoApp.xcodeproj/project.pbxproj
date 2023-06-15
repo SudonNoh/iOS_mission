@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA070C582A3B0AE9001DEB10 /* AddVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA070C572A3B0AE9001DEB10 /* AddVM.swift */; };
 		EA1EC90A2A2213D600E27E7D /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1EC9092A2213D600E27E7D /* APIError.swift */; };
 		EA1EC90C2A22184C00E27E7D /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1EC90B2A22184C00E27E7D /* ErrorResponse.swift */; };
 		EA1EC90F2A221ABE00E27E7D /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = EA1EC90E2A221ABE00E27E7D /* RxCocoa */; };
@@ -39,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EA070C572A3B0AE9001DEB10 /* AddVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddVM.swift; sourceTree = "<group>"; };
 		EA1EC9092A2213D600E27E7D /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		EA1EC90B2A22184C00E27E7D /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 		EA227D192A15DEBB0006E74B /* TodoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoAPI.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 			children = (
 				EAAA8E252A173E3D001E1DF0 /* HomeVM.swift */,
 				EA711E1F2A25E3450080C0A3 /* EditVM.swift */,
+				EA070C572A3B0AE9001DEB10 /* AddVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 				EA23A53E2A155760002894F2 /* SceneDelegate.swift in Sources */,
 				EA1EC90A2A2213D600E27E7D /* APIError.swift in Sources */,
 				EAB55E1B2A31E27F00EF286A /* URLRequest+Ext.swift in Sources */,
+				EA070C582A3B0AE9001DEB10 /* AddVM.swift in Sources */,
 				EA1EC90C2A22184C00E27E7D /* ErrorResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

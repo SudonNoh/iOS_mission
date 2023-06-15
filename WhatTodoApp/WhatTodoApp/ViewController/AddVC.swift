@@ -13,7 +13,7 @@ import RxSwift
 import RxCocoa
 
 
-class AddVC: UIViewController {
+class AddVC: CustomVC {
     
     lazy var countTextLbl: UILabel = UILabel().then {
         $0.text = "0/5"
@@ -54,13 +54,17 @@ class AddVC: UIViewController {
     
     var disposeBag = DisposeBag()
     
+    var viewModel = AddVM()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         
         self.titleTextView.rx.didBeginEditing.subscribe(onNext: {
-            self.titleTextView.text = ""
-            self.titleTextView.textColor = .textColor
+            if self.titleTextView.text == "여섯 글자 이상 입력해주세요." {
+                self.titleTextView.text = ""
+                self.titleTextView.textColor = .textColor
+            }
         })
         .disposed(by: disposeBag)
         
@@ -79,6 +83,11 @@ class AddVC: UIViewController {
                             textLabel: self.countTextLbl,
                             button: self.saveBtn)
             }
+            .disposed(by: disposeBag)
+        
+        self.saveBtn.rx
+            .tap
+            .bind { self.updateATodo() }
             .disposed(by: disposeBag)
     }
 }
@@ -113,5 +122,22 @@ extension AddVC {
             $0.height.equalTo(40)
             $0.bottom.equalTo(safeArea.bottom).inset(15)
         }
+    }
+}
+
+// button Actions
+extension AddVC {
+    func updateATodo() {
+        self.saveBtn.isSelected = true
+        self.showSaveAlert(completion: {
+            
+            self.titleTextView.isEditable = false
+            
+            sleep(5)
+            
+            self.saveBtn.isSelected = false
+            self.titleTextView.isEditable = true
+
+        }, cancelCompletion: {self.saveBtn.isSelected = false})
     }
 }
