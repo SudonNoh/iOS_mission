@@ -31,5 +31,12 @@ extension TodoAPI {
             case .unknown:                                  return "알 수 없는 에러입니다."
             }
         }
+        
+        var code : Int {
+            switch self {
+            case .noContent : return 204
+            default: return 999
+            }
+        }
     }
 }

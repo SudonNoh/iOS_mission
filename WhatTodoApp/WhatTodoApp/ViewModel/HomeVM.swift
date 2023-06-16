@@ -28,6 +28,8 @@ class HomeVM : CustomVM {
     var currentPage : BehaviorRelay<Int> = BehaviorRelay<Int>(value: 1)
     var currentPageInfo : Observable<String>
     
+    var searchTerm: BehaviorRelay<String> = BehaviorRelay<String>(value: "")
+    
     var orderByStatus: OrderBy = .desc
     var isDoneStatus: Bool? = nil
     
@@ -49,11 +51,37 @@ class HomeVM : CustomVM {
             .bind(onNext: self.currentPage.accept(_:))
             .disposed(by: disposeBag)
         
-        fetchTodos(page: 1)
+        searchTerm
+            .withUnretained(self)
+            .debounce(RxTimeInterval.milliseconds(700), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { (viewModel, searchTerm) in
+
+                if searchTerm.count > 0 {
+                    self.pageInfo.accept(nil)
+                    self.currentPage.accept(1)
+                    self.searchTodos(searchTerm: searchTerm,
+                                     orderBy: self.orderByStatus,
+                                     isDone: self.isDoneStatus)
+                } else {
+                    viewModel.fetchTodos()
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
-    // 데이터 가져오기
-    func fetchTodos(page: Int = 1, filterBy: String = "created_at", orderBy: OrderBy = .desc, isDone: Bool? = nil, perPage: Int = 10) {
+    
+    /// Call TodoAPI.fetchTodos, fetch Todo Items
+    /// - Parameters:
+    ///   - page: 불러올 페이지
+    ///   - filterBy: 정렬 방법 1. 생성일 순, 수정일 순
+    ///   - orderBy: 정렬 방법 2. 내림차순, 오름차순
+    ///   - isDone: 완료 여부
+    ///   - perPage: 페이지 당 게시물 수
+    func fetchTodos(page: Int = 1,
+                    filterBy: String = "created_at",
+                    orderBy: OrderBy = .desc,
+                    isDone: Bool? = nil,
+                    perPage: Int = 10) {
 
         if self.isLoadingBottom.value {
             return
@@ -85,16 +113,26 @@ class HomeVM : CustomVM {
             .disposed(by: disposeBag)
     }
     
-    // 데이터 더 가져오기
+    /// TableView의 바닥을 감지해 추가적으로 API를 불러오는 함수
     func fetchMoreTodos() {
         guard let pageInfo = self.pageInfo.value,
               pageInfo.hasNext(),
               !isLoadingBottom.value else { return }
         
-        self.fetchTodos(page: currentPage.value + 1, orderBy: orderByStatus, isDone: isDoneStatus)
+        if searchTerm.value.count > 0 {
+            self.searchTodos(searchTerm: searchTerm.value,
+                             page: self.currentPage.value + 1,
+                             orderBy: orderByStatus,
+                             isDone: isDoneStatus)
+        } else {
+            self.fetchTodos(page: currentPage.value + 1,
+                            orderBy: orderByStatus,
+                            isDone: isDoneStatus)
+        }
     }
     
-    // 데이터 삭제하기
+    /// Call TodoAPI.deleteATodo, delete a Todo Item
+    /// - Parameter id: 게시물 고유 번호
     func deleteATodo(id: Int) {
         if self.isLoadingAction.value {
             return
@@ -104,6 +142,7 @@ class HomeVM : CustomVM {
         
         TodoAPI.deleteATodo(id: id)
             .withUnretained(self)
+            .observe(on: MainScheduler.instance)
             .subscribe ( onNext: { _, _ in
                 let _todoList = self.todoList.value.filter { $0.id ?? 0 != id }
                 self.todoList.accept(_todoList)
@@ -116,8 +155,15 @@ class HomeVM : CustomVM {
             .disposed(by: disposeBag)
     }
     
-    // 데이터 수정하기
-    func updateATodo(id: Int, title: String, isDone: Bool) {
+    
+    /// Call TodoAPI.updateATodo, update a Todo Item
+    /// - Parameters:
+    ///   - id: 게시물 고유 번호
+    ///   - title: 게시물 내용
+    ///   - isDone: 완료 여부
+    func updateATodo(id: Int,
+                     title: String,
+                     isDone: Bool) {
         if self.isLoadingAction.value {
             return
         }
@@ -126,6 +172,7 @@ class HomeVM : CustomVM {
         
         TodoAPI.updateATodo(id: id, title: title, isDone: isDone)
             .withUnretained(self)
+            .observe(on: MainScheduler.instance)
             .subscribe ( onNext: { (HomeVM, TodoResponse) in
                 var _todoList = self.todoList.value
                 //MARK: - 업데이트 방식, TodoResponse에 있는 isDone, title, updatedAt을 var로 변경
@@ -148,8 +195,56 @@ class HomeVM : CustomVM {
             .disposed(by: disposeBag)
     }
     
-    // 데이터 새로고침
+    
+    /// 새로고침
     func refreshTodos() {
         self.fetchTodos(page: 1, orderBy: orderByStatus, isDone: isDoneStatus)
+    }
+    
+    func searchTodos(searchTerm: String,
+                     page: Int = 1,
+                     orderBy: OrderBy,
+                     isDone: Bool?) {
+        
+        
+        if searchTerm.count < 1 {
+            return
+        }
+        
+        if self.isLoadingBottom.value {
+            return
+        }
+        
+        if page == 1 {
+            self.todoList.accept([])
+        }
+        
+        self.isLoadingBottom.accept(true)
+        
+        TodoAPI.searchTodos(searchTerm: searchTerm,
+                            page: page,
+                            orderBy: orderBy,
+                            isDone: isDone)
+        .withUnretained(self)
+        .observe(on: MainScheduler.instance)
+        .subscribe(onNext: {(_, TodoListResponse) in
+            guard let data = TodoListResponse.data,
+                  let pageInfo = TodoListResponse.meta else { return }
+            
+            if page == 1 {
+                self.todoList.accept(data)
+            } else {
+                let addTodos = self.todoList.value + data
+                self.todoList.accept(addTodos)
+            }
+            self.pageInfo.accept(pageInfo)
+            
+        }, onError: { Error in
+            self.errorMsg.accept(self.errorHandler(Error))
+            self.isLoadingBottom.accept(false)
+        }, onCompleted: {
+            self.isLoadingBottom.accept(false)
+        })
+        .disposed(by: disposeBag)
     }
 }

@@ -13,17 +13,31 @@ import RxRelay
 class AddVM: CustomVM {
     var disposeBag = DisposeBag()
     
-    override init() {
-        super.init()
-        self.addATodo(title: "자동으로 추가된 항목입니다.", isDone: true)
-    }
+    var todo: PublishRelay<Todo> = PublishRelay()
+    
+    var errorMsg: PublishRelay<String> = PublishRelay()
+    
+    var isLoadingAction: BehaviorRelay<Bool> = BehaviorRelay<Bool>(value: false)
     
     func addATodo(title: String, isDone: Bool) {
+        
+        if self.isLoadingAction.value {
+            return
+        }
+        
+        self.isLoadingAction.accept(true)
+        
         TodoAPI.addATodo(title: title, isDone: isDone)
             .withUnretained(self)
-            .subscribe(onNext: {(VM, data) in
-                print(VM)
-                print(data)
+            .subscribe(onNext: {(_, TodoResponse) in
+                guard let data = TodoResponse.data else {return}
+                self.todo.accept(data)
+            }, onError: { Error in
+                self.errorMsg.accept(self.errorHandler(Error))
+                self.isLoadingAction.accept(false)
+                
+            }, onCompleted: {
+                self.isLoadingAction.accept(false)
             })
             .disposed(by: disposeBag)
     }

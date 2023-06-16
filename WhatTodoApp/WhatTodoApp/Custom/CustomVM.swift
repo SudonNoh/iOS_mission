@@ -13,6 +13,7 @@ class CustomVM {
         guard let apiError = err as? TodoAPI.APIError else {
             return ""
         }
+        
         return apiError.info
     }
 }

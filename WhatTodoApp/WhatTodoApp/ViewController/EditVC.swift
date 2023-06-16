@@ -117,7 +117,7 @@ class EditVC: CustomVC {
             .todo
             .withUnretained(self)
             .observe(on: MainScheduler.instance)
-            .bind { (VC, todo) in self.showDoneAlert() {
+            .bind { (_, todo) in self.showDoneAlert() {
                 // SendDataDelegate
                 guard let delegate = self.delegate else {return}
                 delegate.refreshList(true)
@@ -221,27 +221,3 @@ extension EditVC {
     }
 }
 
-// SendDataDelegate
-protocol SendDataDelegate: AnyObject {
-    func refreshList(_ bool: Bool)
-}
-
-
-/* placeHolder를 사용해야 하는 경우 설정
-        self.titleTextView.rx.didBeginEditing.subscribe(onNext: {
-            self.titleTextView.text = ""
-            self.titleTextView.textColor = .textColor
-        })
-        .disposed(by: disposeBag)
- 
-         self.titleTextView.rx
-             .didEndEditing
-             .subscribe(onNext: {
-                 // 글자 수가 모자란 경우
-                 if self.titleTextView.text.count == 0 {
-                     self.titleTextView.text = "여섯 글자 이상 입력해주세요."
-                     self.titleTextView.textColor = .systemGray
-                 }
-             })
-             .disposed(by: disposeBag)
-*/

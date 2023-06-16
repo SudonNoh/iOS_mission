@@ -139,8 +139,9 @@ class HomeVC: CustomVC {
               .errorMsg
               .withUnretained(self)
               .observe(on: MainScheduler.instance)
-              .subscribe(onNext: { VC, msg in
-                  VC.showErrorAlert(errMsg: msg)
+              .subscribe(onNext: { vc, msg in
+                  vc.showErrorAlert(errMsg: msg)
+                  if msg == "데이터가 없습니다." { self.searchBar.text = "" }
               }).disposed(by: disposeBag)
         
         self.viewModel
@@ -173,6 +174,7 @@ class HomeVC: CustomVC {
             .tap
             .bind {
                 let vc = AddVC()
+                vc.delegate = self
                 self.navigationController?.pushViewController(vc, animated: true)
             }
             .disposed(by: disposeBag)
@@ -194,6 +196,10 @@ class HomeVC: CustomVC {
         
         self.showNotCompletedBtn.rx.tap
             .bind { self.isDoneBtnActions(btn: 2) }
+            .disposed(by: disposeBag)
+        
+        self.searchBar.searchTextField.rx.text.orEmpty
+            .bind(onNext: self.viewModel.searchTerm.accept(_:))
             .disposed(by: disposeBag)
     }
     
@@ -257,7 +263,7 @@ extension HomeVC {
         }
         
         addBtn.snp.makeConstraints {
-            $0.bottom.equalTo(safeArea.bottom).inset(100)
+            $0.bottom.equalTo(safeArea.bottom).inset(60)
             $0.trailing.equalTo(safeArea.trailing).inset(60)
             $0.width.equalTo(addBtnSize)
             $0.height.equalTo(addBtnSize)
@@ -339,9 +345,19 @@ extension HomeVC {
             self.viewModel.orderByStatus = .desc
             self.orderByBtn.rx.image().onNext(UIImage(systemName: "arrowtriangle.down.square.fill"))
         }
-        // VM에서 안하고 여기서 이런 식으로 처리해도 되는지?
-        self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus,
-                                  isDone: self.viewModel.isDoneStatus)
+        
+        guard let searchText = self.searchBar.text else { return }
+        
+        // 이 부분도 확인
+        if searchText.count == 0 {
+            // 이런식으로 처리해도 되는지?
+            self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus,
+                                      isDone: self.viewModel.isDoneStatus)
+        } else {
+            self.viewModel.searchTodos(searchTerm: self.viewModel.searchTerm.value,
+                                       orderBy: self.viewModel.orderByStatus,
+                                       isDone: self.viewModel.isDoneStatus)
+        }
     }
     
     func isDoneBtnActions(btn: Int) {
@@ -365,8 +381,16 @@ extension HomeVC {
             self.viewModel.isDoneStatus = nil
         }
         
-        self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus,
-                                  isDone: self.viewModel.isDoneStatus)
+        guard let searchText = self.searchBar.text else { return }
+        
+        if searchText.count == 0 {
+            self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus,
+                                      isDone: self.viewModel.isDoneStatus)
+        } else {
+            self.viewModel.searchTodos(searchTerm: self.viewModel.searchTerm.value,
+                                       orderBy: self.viewModel.orderByStatus,
+                                       isDone: self.viewModel.isDoneStatus)
+        }
     }
     
     func statusIcon(status: Bool, btn: UIButton) {

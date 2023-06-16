@@ -15,6 +15,8 @@ import RxCocoa
 
 class AddVC: CustomVC {
     
+    weak var delegate: SendDataDelegate?
+    
     lazy var countTextLbl: UILabel = UILabel().then {
         $0.text = "0/5"
         $0.textColor = .red
@@ -42,6 +44,7 @@ class AddVC: CustomVC {
         $0.layer.cornerRadius = 5
         $0.layer.borderColor = UIColor.textPoint?.cgColor
         $0.layer.borderWidth = 1
+        $0.isEnabled = false
     }
     
     lazy var actionIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
@@ -60,21 +63,27 @@ class AddVC: CustomVC {
         super.viewDidLoad()
         setup()
         
-        self.titleTextView.rx.didBeginEditing.subscribe(onNext: {
-            if self.titleTextView.text == "여섯 글자 이상 입력해주세요." {
-                self.titleTextView.text = ""
-                self.titleTextView.textColor = .textColor
-            }
-        })
-        .disposed(by: disposeBag)
+        self.titleTextView
+            .rx
+            .didBeginEditing
+            .subscribe(onNext: {
+                if self.titleTextView.text == "여섯 글자 이상 입력해주세요." {
+                    self.titleTextView.text = ""
+                    self.titleTextView.textColor = .textColor
+                }
+            })
+            .disposed(by: disposeBag)
         
-        self.titleTextView.rx.didEndEditing.subscribe(onNext: {
-            if self.titleTextView.text.count == 0 {
-                self.titleTextView.text = "여섯 글자 이상 입력해주세요."
-                self.titleTextView.textColor = .systemGray
-            }
-        })
-        .disposed(by: disposeBag)
+        self.titleTextView
+            .rx
+            .didEndEditing
+            .subscribe(onNext: {
+                if self.titleTextView.text.count == 0 {
+                    self.titleTextView.text = "여섯 글자 이상 입력해주세요."
+                    self.titleTextView.textColor = .systemGray
+                }
+            })
+            .disposed(by: disposeBag)
         
         self.titleTextView.rx
             .didChange
@@ -87,7 +96,36 @@ class AddVC: CustomVC {
         
         self.saveBtn.rx
             .tap
-            .bind { self.updateATodo() }
+            .bind { self.saveATodo() }
+            .disposed(by: disposeBag)
+        
+        self.viewModel
+            .todo
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .bind { (_, todo) in self.showDoneAlert() {
+                guard let delegate = self.delegate else { return }
+                delegate.refreshList(true)
+                self.navigationController?.popViewController(animated: true)
+            }}
+            .disposed(by: disposeBag)
+        
+        self.viewModel
+            .errorMsg
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { VC, msg in
+                VC.showErrorAlert(errMsg: msg)
+                self.titleTextView.isEditable = true
+            }).disposed(by: disposeBag)
+        
+        self.viewModel
+            .isLoadingAction
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { _, isLoadingAction in
+                isLoadingAction ? self.actionIndicator.startAnimating() : self.actionIndicator.stopAnimating()
+            })
             .disposed(by: disposeBag)
     }
 }
@@ -127,17 +165,19 @@ extension AddVC {
 
 // button Actions
 extension AddVC {
-    func updateATodo() {
+    func saveATodo() {
         self.saveBtn.isSelected = true
         self.showSaveAlert(completion: {
             
             self.titleTextView.isEditable = false
             
-            sleep(5)
+            guard let title = self.titleTextView.text else { return }
+            
+            self.viewModel.addATodo(title: title, isDone: false)
             
             self.saveBtn.isSelected = false
             self.titleTextView.isEditable = true
-
+            
         }, cancelCompletion: {self.saveBtn.isSelected = false})
     }
 }
