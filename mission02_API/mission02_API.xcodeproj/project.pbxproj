@@ -28,7 +28,6 @@
 		EA850F912A17CC5A001823B7 /* MocksVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA850F902A17CC5A001823B7 /* MocksVM.swift */; };
 		EA850F932A17CC69001823B7 /* MocksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA850F922A17CC69001823B7 /* MocksAPI.swift */; };
 		EAA0F6522A20551500BB43DA /* SecondDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA0F6512A20551500BB43DA /* SecondDetailVC.swift */; };
-		EAC8B0202A40146800D1686F /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC8B01F2A40146800D1686F /* Env.swift */; };
 		EAEBEFB32A1CBD09005F1DC3 /* SecondVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEBEFB22A1CBD09005F1DC3 /* SecondVC.swift */; };
 		EAEBEFB52A1CBD8E005F1DC3 /* MocksError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEBEFB42A1CBD8E005F1DC3 /* MocksError.swift */; };
 		EAEBEFB72A1CBE20005F1DC3 /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAEBEFB62A1CBE20005F1DC3 /* ErrorResponse.swift */; };
@@ -53,7 +52,6 @@
 		EA850F902A17CC5A001823B7 /* MocksVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocksVM.swift; sourceTree = "<group>"; };
 		EA850F922A17CC69001823B7 /* MocksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocksAPI.swift; sourceTree = "<group>"; };
 		EAA0F6512A20551500BB43DA /* SecondDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondDetailVC.swift; sourceTree = "<group>"; };
-		EAC8B01F2A40146800D1686F /* Env.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
 		EAEBEFB22A1CBD09005F1DC3 /* SecondVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondVC.swift; sourceTree = "<group>"; };
 		EAEBEFB42A1CBD8E005F1DC3 /* MocksError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MocksError.swift; sourceTree = "<group>"; };
 		EAEBEFB62A1CBE20005F1DC3 /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
@@ -107,7 +105,6 @@
 				EA850F682A17C2A3001823B7 /* LaunchScreen.storyboard */,
 				EA850F6B2A17C2A3001823B7 /* Info.plist */,
 				EA850F662A17C2A3001823B7 /* Assets.xcassets */,
-				EAC8B01F2A40146800D1686F /* Env.swift */,
 			);
 			path = mission02_API;
 			sourceTree = "<group>";
@@ -256,7 +253,6 @@
 				EA850F622A17C2A3001823B7 /* FirstVC.swift in Sources */,
 				EA850F812A17C3CF001823B7 /* CustomVC.swift in Sources */,
 				EAEBEFB92A1CC23E005F1DC3 /* FirstDetailVC.swift in Sources */,
-				EAC8B0202A40146800D1686F /* Env.swift in Sources */,
 				EAEBEFB52A1CBD8E005F1DC3 /* MocksError.swift in Sources */,
 				EA72C2A62A188B5000687F88 /* Preview+Ext.swift in Sources */,
 				EA72C2A42A186BC600687F88 /* MocksResponse.swift in Sources */,

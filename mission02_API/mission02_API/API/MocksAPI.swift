@@ -17,7 +17,7 @@ public enum orderBy: Int {
 enum MocksAPI {
     
     static let version = Env.version
-    static let baseUrl = Env.baseUrl
+    static let baseUrl = Env.baseUrl + version + "/mocks"
     
     static let session = URLSession.shared
     
