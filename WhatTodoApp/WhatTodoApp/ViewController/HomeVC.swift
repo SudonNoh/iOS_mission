@@ -155,7 +155,7 @@ class HomeVC: CustomVC {
             .bind(onNext: { self.viewModel.fetchMoreTodos() })
             .disposed(by: disposeBag)
         
-        //MARK: - tableView dragging 관련
+        //MARK: - 문의2) tableView dragging 관련
         self.todoTableView
             .rx
             .willBeginDragging
@@ -335,9 +335,7 @@ extension HomeVC: UITableViewDelegate {
 // Button Function
 extension HomeVC {
     func orderByFucntion() {
-        //MARK: - orderByStatus 관련
-        // viewModel에 선언한 변수를 가져와서 변경해주었는데, 이런 식으로 구현해도 되는가?
-        // image 변경 다른 방법이 있는가?
+        //MARK: - 문의3) orderByStatus 관련
         if self.viewModel.orderByStatus == .desc {
             self.viewModel.orderByStatus = .asc
             self.orderByBtn.rx.image().onNext(UIImage(systemName: "arrowtriangle.up.square.fill"))
@@ -348,9 +346,7 @@ extension HomeVC {
         
         guard let searchText = self.searchBar.text else { return }
         
-        // 이 부분도 확인
         if searchText.count == 0 {
-            // 이런식으로 처리해도 되는지?
             self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus,
                                       isDone: self.viewModel.isDoneStatus)
         } else {
@@ -370,7 +366,7 @@ extension HomeVC {
             statusIcon(status: self.notCompltedBtnOn, btn: self.showNotCompletedBtn)
         }
         
-        //MARK: - if문을 줄일 수 있는 방법?
+        //MARK: - 문의4) if문을 줄일 수 있는 방법?
         if (self.completedBtnOn&&self.notCompltedBtnOn == true) {
             self.viewModel.isDoneStatus = nil
         } else if self.completedBtnOn == true {

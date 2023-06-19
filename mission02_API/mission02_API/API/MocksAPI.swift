@@ -16,8 +16,8 @@ public enum orderBy: Int {
 
 enum MocksAPI {
     
-    static let version = "v1"
-    static let baseUrl = "https://phplaravel-574671-2962113.cloudwaysapps.com/api/" + version + "/mocks"
+    static let version = Env.version
+    static let baseUrl = Env.baseUrl
     
     static let session = URLSession.shared
     

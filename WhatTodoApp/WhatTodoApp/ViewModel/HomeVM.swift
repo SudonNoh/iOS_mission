@@ -175,7 +175,7 @@ class HomeVM : CustomVM {
             .observe(on: MainScheduler.instance)
             .subscribe ( onNext: { (HomeVM, TodoResponse) in
                 var _todoList = self.todoList.value
-                //MARK: - 업데이트 방식, TodoResponse에 있는 isDone, title, updatedAt을 var로 변경
+                //MARK: - 문의1) 업데이트 방식, TodoResponse에 있는 isDone, title, updatedAt을 var로 변경
                 guard let data = TodoResponse.data,
                       let id = data.id,
                       let idx = _todoList.firstIndex(where: { $0.id == id }) else { return }
