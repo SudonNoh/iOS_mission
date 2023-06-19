@@ -36,6 +36,7 @@
 		EAAA8E352A174C26001E1DF0 /* Fakery in Frameworks */ = {isa = PBXBuildFile; productRef = EAAA8E342A174C26001E1DF0 /* Fakery */; };
 		EAB55E1B2A31E27F00EF286A /* URLRequest+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAB55E1A2A31E27F00EF286A /* URLRequest+Ext.swift */; };
 		EABCFB502A2345E3008BFAE9 /* ReuseIdentifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABCFB4F2A2345E3008BFAE9 /* ReuseIdentifiable.swift */; };
+		EAC8B0222A401BDC00D1686F /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC8B0212A401BDC00D1686F /* Env.swift */; };
 		EAD9A8422A3BF5AD003734CD /* SendDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD9A8412A3BF5AD003734CD /* SendDataDelegate.swift */; };
 		EAF7F5302A16248500BD9A15 /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7F52F2A16248500BD9A15 /* DummyData.swift */; };
 /* End PBXBuildFile section */
@@ -66,6 +67,7 @@
 		EAAA8E252A173E3D001E1DF0 /* HomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVM.swift; sourceTree = "<group>"; };
 		EAB55E1A2A31E27F00EF286A /* URLRequest+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLRequest+Ext.swift"; sourceTree = "<group>"; };
 		EABCFB4F2A2345E3008BFAE9 /* ReuseIdentifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReuseIdentifiable.swift; sourceTree = "<group>"; };
+		EAC8B0212A401BDC00D1686F /* Env.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
 		EAD9A8412A3BF5AD003734CD /* SendDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendDataDelegate.swift; sourceTree = "<group>"; };
 		EAF7F52F2A16248500BD9A15 /* DummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -159,6 +161,7 @@
 				EA23A5462A155761002894F2 /* LaunchScreen.storyboard */,
 				EA23A5492A155761002894F2 /* Info.plist */,
 				EA23A5442A155761002894F2 /* Assets.xcassets */,
+				EAC8B0212A401BDC00D1686F /* Env.swift */,
 			);
 			path = WhatTodoApp;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 				EAD9A8422A3BF5AD003734CD /* SendDataDelegate.swift in Sources */,
 				EA1EC90A2A2213D600E27E7D /* APIError.swift in Sources */,
 				EAB55E1B2A31E27F00EF286A /* URLRequest+Ext.swift in Sources */,
+				EAC8B0222A401BDC00D1686F /* Env.swift in Sources */,
 				EA070C582A3B0AE9001DEB10 /* AddVM.swift in Sources */,
 				EA1EC90C2A22184C00E27E7D /* ErrorResponse.swift in Sources */,
 			);

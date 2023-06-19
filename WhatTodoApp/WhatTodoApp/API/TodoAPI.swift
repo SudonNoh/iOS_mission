@@ -16,8 +16,8 @@ public enum OrderBy {
 
 enum TodoAPI {
     
-    static let version = "v2"
-    static let baseURL = "https://phplaravel-574671-2962113.cloudwaysapps.com/api/" + version
+    static let version = Env.version
+    static let baseURL = Env.baseURL + version
     
     static let session = URLSession.shared
     
