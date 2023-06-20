@@ -155,7 +155,6 @@ class HomeVC: CustomVC {
             .bind(onNext: { self.viewModel.fetchMoreTodos() })
             .disposed(by: disposeBag)
         
-        //MARK: - 문의2) tableView dragging 관련
         self.todoTableView
             .rx
             .willBeginDragging
@@ -221,7 +220,6 @@ class HomeVC: CustomVC {
     }
 }
 
-// UI Setup
 extension HomeVC {
     
     func setup() {
@@ -284,7 +282,6 @@ extension HomeVC: UITableViewDelegate {
         let vc = EditVC()
         let eachData = self.viewModel.todoList.value[indexPath.row]
         vc.data = eachData
-        // SendDataDelegate
         vc.delegate = self
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -332,10 +329,8 @@ extension HomeVC: UITableViewDelegate {
     }
 }
 
-// Button Function
 extension HomeVC {
     func orderByFucntion() {
-        //MARK: - 문의3) orderByStatus 관련
         if self.viewModel.orderByStatus == .desc {
             self.viewModel.orderByStatus = .asc
             self.orderByBtn.rx.image().onNext(UIImage(systemName: "arrowtriangle.up.square.fill"))
@@ -366,15 +361,11 @@ extension HomeVC {
             statusIcon(status: self.notCompltedBtnOn, btn: self.showNotCompletedBtn)
         }
         
-        //MARK: - 문의4) if문을 줄일 수 있는 방법?
-        if (self.completedBtnOn&&self.notCompltedBtnOn == true) {
-            self.viewModel.isDoneStatus = nil
-        } else if self.completedBtnOn == true {
-            self.viewModel.isDoneStatus = true
-        } else if self.notCompltedBtnOn == true {
-            self.viewModel.isDoneStatus = false
-        } else {
-            self.viewModel.isDoneStatus = nil
+        switch (self.completedBtnOn, self.notCompltedBtnOn) {
+        case (true, true): self.viewModel.isDoneStatus = nil
+        case (true, false): self.viewModel.isDoneStatus = true
+        case (false, true): self.viewModel.isDoneStatus = false
+        default: self.viewModel.isDoneStatus = nil
         }
         
         guard let searchText = self.searchBar.text else { return }
@@ -395,7 +386,6 @@ extension HomeVC {
     }
 }
 
-// SendDataDelegate
 extension HomeVC: SendDataDelegate {
     func refreshList(_ bool: Bool) {
         self.isUpdated = true

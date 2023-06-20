@@ -16,9 +16,6 @@ import Then
 
 class EditVC: CustomVC {
     
-    //MARK: - 리스트 업데이트를 Delegate를 활용해서 업데이트 여부를 보냈는데, 이런 방식으로 처리하는 것이 맞는지 궁금
-    // Delegate 방식 외에 다른 방식이 있는지 궁금
-    // SendDataDelegate
     weak var delegate: SendDataDelegate?
     
     var data: Todo? = nil
@@ -30,12 +27,6 @@ class EditVC: CustomVC {
         $0.textAlignment = .center
     }
     
-    //MARK: - TextView Edit Error
-    /*
-     TextField 부분에 입력될 때 입력 속도가 맞지 않아 발생하는 거 같다. 확실히 파악하지 못했음.
-     2023-05-31 09:41:45.256793+0900 WhatTodoApp[1796:28520] [Query] Error for queryMetaDataSync: 2
-     2023-05-31 09:41:45.258201+0900 WhatTodoApp[1796:28520] [Query] Error for queryMetaDataSync: 2
-    */
     lazy var titleTextView: UITextView = UITextView().then {
         $0.text = "여섯 글자 이상 입력해주세요."
         $0.textColor = .systemGray
@@ -118,7 +109,6 @@ class EditVC: CustomVC {
             .withUnretained(self)
             .observe(on: MainScheduler.instance)
             .bind { (_, todo) in self.showDoneAlert() {
-                // SendDataDelegate
                 guard let delegate = self.delegate else {return}
                 delegate.refreshList(true)
                 self.navigationController?.popViewController(animated: true)
@@ -199,7 +189,6 @@ extension EditVC {
     }
 }
 
-// button Actions
 extension EditVC {
     func updateATodo() {
         self.saveBtn.isSelected = true
