@@ -48,10 +48,12 @@ class HomeVC: CustomVC {
     lazy var showCompletedBtn : UIButton = UIButton().then {
         $0.setImage(UIImage(systemName: "smallcircle.filled.circle.fill"), for: .normal)
         $0.tintColor = .systemGreen
+        $0.tag = 0
     }
     lazy var showNotCompletedBtn : UIButton = UIButton().then {
         $0.setImage(UIImage(systemName: "smallcircle.filled.circle.fill"), for: .normal)
         $0.tintColor = .systemRed
+        $0.tag = 1
     }
     var addBtnSize: CGFloat = 60
     lazy var addBtn : UIButton = UIButton().then {
@@ -62,7 +64,7 @@ class HomeVC: CustomVC {
     }
     
     var completedBtnOn: Bool = true
-    var notCompltedBtnOn: Bool = true
+    var notCompletedBtnOn: Bool = true
     var isUpdated: Bool = false
     
     lazy var bottomIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
@@ -190,11 +192,11 @@ class HomeVC: CustomVC {
             .disposed(by: disposeBag)
         
         self.showCompletedBtn.rx.tap
-            .bind { self.isDoneBtnActions(btn: 1) }
+            .bind {self.isDoneBtnActions(tag: self.showCompletedBtn.tag)}
             .disposed(by: disposeBag)
         
         self.showNotCompletedBtn.rx.tap
-            .bind { self.isDoneBtnActions(btn: 2) }
+            .bind {self.isDoneBtnActions(tag: self.showNotCompletedBtn.tag)}
             .disposed(by: disposeBag)
         
         self.searchBar.searchTextField.rx.text.orEmpty
@@ -295,7 +297,7 @@ extension HomeVC: UITableViewDelegate {
         
         let completeAction = UIContextualAction(style: .normal, title: btnTitle) { (_, _, completionHandler) in
             
-            let comment = isDone ? "완료 처리 하시겠습니까?" : "미완료 처리 하시겠습니까?"
+            let comment = isDone ? "미완료 처리 하시겠습니까?" : "완료 처리 하시겠습니까?"
             
             self.showCompleteAlert(message: comment) {
                 guard let id = self.viewModel.todoList.value[indexPath.row].id,
@@ -331,37 +333,27 @@ extension HomeVC: UITableViewDelegate {
 
 extension HomeVC {
     func orderByFucntion() {
-        if self.viewModel.orderByStatus == .desc {
-            self.viewModel.orderByStatus = .asc
-            self.orderByBtn.rx.image().onNext(UIImage(systemName: "arrowtriangle.up.square.fill"))
-        } else {
-            self.viewModel.orderByStatus = .desc
-            self.orderByBtn.rx.image().onNext(UIImage(systemName: "arrowtriangle.down.square.fill"))
-        }
+        
+        let arrowStatus = self.viewModel.returnOrderByStatus() == .desc ? "down" : "up"
+
+        self.orderByBtn.rx.image().onNext(UIImage(systemName: "arrowtriangle.\(arrowStatus).square.fill"))
         
         guard let searchText = self.searchBar.text else { return }
         
-        if searchText.count == 0 {
-            self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus,
-                                      isDone: self.viewModel.isDoneStatus)
-        } else {
-            self.viewModel.searchTodos(searchTerm: self.viewModel.searchTerm.value,
-                                       orderBy: self.viewModel.orderByStatus,
-                                       isDone: self.viewModel.isDoneStatus)
-        }
+        self.viewModel.fetchOrSearch(status: searchText.count == 0)
     }
     
-    func isDoneBtnActions(btn: Int) {
+    func isDoneBtnActions(tag: Int) {
         
-        if btn == 1 {
+        if tag == 0 {
             self.completedBtnOn = self.completedBtnOn ? false : true
             statusIcon(status: self.completedBtnOn, btn: self.showCompletedBtn)
         } else {
-            self.notCompltedBtnOn = self.notCompltedBtnOn ? false : true
-            statusIcon(status: self.notCompltedBtnOn, btn: self.showNotCompletedBtn)
+            self.notCompletedBtnOn = self.notCompletedBtnOn ? false : true
+            statusIcon(status: self.notCompletedBtnOn, btn: self.showNotCompletedBtn)
         }
         
-        switch (self.completedBtnOn, self.notCompltedBtnOn) {
+        switch (self.completedBtnOn, self.notCompletedBtnOn) {
         case (true, true): self.viewModel.isDoneStatus = nil
         case (true, false): self.viewModel.isDoneStatus = true
         case (false, true): self.viewModel.isDoneStatus = false
@@ -370,14 +362,7 @@ extension HomeVC {
         
         guard let searchText = self.searchBar.text else { return }
         
-        if searchText.count == 0 {
-            self.viewModel.fetchTodos(orderBy: self.viewModel.orderByStatus,
-                                      isDone: self.viewModel.isDoneStatus)
-        } else {
-            self.viewModel.searchTodos(searchTerm: self.viewModel.searchTerm.value,
-                                       orderBy: self.viewModel.orderByStatus,
-                                       isDone: self.viewModel.isDoneStatus)
-        }
+        self.viewModel.fetchOrSearch(status: searchText.count == 0)
     }
     
     func statusIcon(status: Bool, btn: UIButton) {

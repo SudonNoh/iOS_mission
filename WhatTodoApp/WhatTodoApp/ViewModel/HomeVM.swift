@@ -33,6 +33,9 @@ class HomeVM : CustomVM {
     var orderByStatus: OrderBy = .desc
     var isDoneStatus: Bool? = nil
     
+    var completedBtnOn: Bool = true
+    var notCompletedBtnOn: Bool = true
+    
     override init() {
         self.notifyHasNextPage = pageInfo.skip(1).map { $0?.hasNext() ?? true  }
         self.currentPageInfo = currentPage.map { "\($0)" }
@@ -63,7 +66,8 @@ class HomeVM : CustomVM {
                                      orderBy: self.orderByStatus,
                                      isDone: self.isDoneStatus)
                 } else {
-                    viewModel.fetchTodos()
+                    viewModel.fetchTodos(orderBy: self.orderByStatus,
+                                         isDone: self.isDoneStatus)
                 }
             })
             .disposed(by: disposeBag)
@@ -93,6 +97,7 @@ class HomeVM : CustomVM {
             .delay(RxTimeInterval.milliseconds(700), scheduler: MainScheduler.instance)
             .flatMapLatest { TodoAPI.fetchTodos(page, filterBy, orderBy, isDone, perPage) }
             .subscribe(onNext: { response in
+                
                 guard let data = response.data,
                       let pageInfo = response.meta else { return }
                 
@@ -198,14 +203,13 @@ class HomeVM : CustomVM {
     
     /// 새로고침
     func refreshTodos() {
-        self.fetchTodos(page: 1, orderBy: orderByStatus, isDone: isDoneStatus)
+        self.fetchTodos(page: 1, orderBy: self.orderByStatus, isDone: self.isDoneStatus)
     }
     
     func searchTodos(searchTerm: String,
                      page: Int = 1,
                      orderBy: OrderBy,
                      isDone: Bool?) {
-        
         
         if searchTerm.count < 1 {
             return
@@ -246,5 +250,23 @@ class HomeVM : CustomVM {
             self.isLoadingBottom.accept(false)
         })
         .disposed(by: disposeBag)
+    }
+}
+
+// function for UI
+extension HomeVM {
+    func returnOrderByStatus() -> OrderBy {
+        self.orderByStatus = self.orderByStatus == .desc ? .asc : .desc
+        return self.orderByStatus
+    }
+    
+    func fetchOrSearch(status: Bool) {
+        switch status {
+        case true: self.fetchTodos(orderBy: self.orderByStatus,
+                                   isDone: self.isDoneStatus)
+        case false: self.searchTodos(searchTerm: self.searchTerm.value,
+                                     orderBy: self.orderByStatus,
+                                     isDone: self.isDoneStatus)
+        }
     }
 }

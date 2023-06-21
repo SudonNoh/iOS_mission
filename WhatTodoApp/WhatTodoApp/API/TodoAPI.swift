@@ -233,8 +233,6 @@ enum TodoAPI {
         
         var urlComponents = URLComponents(string: baseURL + "/todos/search")
         
-        print(#fileID, #function, #line, "- \(orderBy)")
-        
         urlComponents?.queryItems = [
             URLQueryItem(name: "query", value: searchTerm),
             URLQueryItem(name: "filter", value: filterBy),
