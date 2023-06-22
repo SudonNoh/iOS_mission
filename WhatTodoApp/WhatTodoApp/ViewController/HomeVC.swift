@@ -63,8 +63,8 @@ class HomeVC: CustomVC {
         $0.layer.cornerRadius = addBtnSize/2
     }
     
-    var completedBtnOn: Bool = true
-    var notCompletedBtnOn: Bool = true
+//    var completedBtnOn: Bool = true
+//    var notCompletedBtnOn: Bool = true
     var isUpdated: Bool = false
     
     lazy var bottomIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
@@ -192,11 +192,11 @@ class HomeVC: CustomVC {
             .disposed(by: disposeBag)
         
         self.showCompletedBtn.rx.tap
-            .bind {self.isDoneBtnActions(tag: self.showCompletedBtn.tag)}
+            .bind {self.isDoneBtnActions(btn: self.showCompletedBtn)}
             .disposed(by: disposeBag)
         
         self.showNotCompletedBtn.rx.tap
-            .bind {self.isDoneBtnActions(tag: self.showNotCompletedBtn.tag)}
+            .bind {self.isDoneBtnActions(btn: self.showNotCompletedBtn)}
             .disposed(by: disposeBag)
         
         self.searchBar.searchTextField.rx.text.orEmpty
@@ -343,26 +343,8 @@ extension HomeVC {
         self.viewModel.fetchOrSearch(status: searchText.count == 0)
     }
     
-    func isDoneBtnActions(tag: Int) {
-        
-        if tag == 0 {
-            self.completedBtnOn = self.completedBtnOn ? false : true
-            statusIcon(status: self.completedBtnOn, btn: self.showCompletedBtn)
-        } else {
-            self.notCompletedBtnOn = self.notCompletedBtnOn ? false : true
-            statusIcon(status: self.notCompletedBtnOn, btn: self.showNotCompletedBtn)
-        }
-        
-        switch (self.completedBtnOn, self.notCompletedBtnOn) {
-        case (true, true): self.viewModel.isDoneStatus = nil
-        case (true, false): self.viewModel.isDoneStatus = true
-        case (false, true): self.viewModel.isDoneStatus = false
-        default: self.viewModel.isDoneStatus = nil
-        }
-        
-        guard let searchText = self.searchBar.text else { return }
-        
-        self.viewModel.fetchOrSearch(status: searchText.count == 0)
+    func isDoneBtnActions(btn: UIButton) {
+        self.viewModel.isDoneBtnActions(btn: btn)
     }
     
     func statusIcon(status: Bool, btn: UIButton) {

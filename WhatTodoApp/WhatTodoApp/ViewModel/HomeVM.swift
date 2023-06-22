@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 import RxSwift
 import RxRelay
 import RxCocoa
@@ -268,5 +269,29 @@ extension HomeVM {
                                      orderBy: self.orderByStatus,
                                      isDone: self.isDoneStatus)
         }
+    }
+    
+    func isDoneBtnActions(btn: UIButton) {
+        if btn.tag == 0 {
+            self.completedBtnOn = self.completedBtnOn ? false : true
+            self.statusIsDoneBtnIcon(status: self.completedBtnOn, btn: btn)
+        } else {
+            self.notCompletedBtnOn = self.notCompletedBtnOn ? false : true
+            self.statusIsDoneBtnIcon(status: self.notCompletedBtnOn, btn: btn)
+        }
+        
+        switch (self.completedBtnOn, self.notCompletedBtnOn) {
+        case (true, true): self.isDoneStatus = nil
+        case (true, false): self.isDoneStatus = true
+        case (false, true): self.isDoneStatus = false
+        default: self.isDoneStatus = nil
+        }
+        
+        self.fetchOrSearch(status: self.searchTerm.value.count == 0)
+    }
+    
+    func statusIsDoneBtnIcon(status: Bool, btn: UIButton) {
+        let string = status ? ".fill":""
+        btn.rx.image().onNext(UIImage(systemName: "smallcircle.filled.circle\(string)"))
     }
 }
