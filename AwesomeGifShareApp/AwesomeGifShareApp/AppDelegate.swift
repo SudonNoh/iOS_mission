@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  WhatTodoApp
+//  AwesomeGifShareApp
 //
-//  Created by Sudon Noh on 2023/05/18.
+//  Created by Sudon Noh on 2023/06/24.
 //
 
 import UIKit
@@ -10,9 +10,10 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        // sleep(2)
         return true
     }
 
