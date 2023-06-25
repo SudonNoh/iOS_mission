@@ -1,6 +1,6 @@
 //
 //  HomeVC.swift
-//  WhatTodoApp
+//  WhatTodoApp/ViewController/HomeVC.swift HomeVC().viewDidLoadO()
 //
 //  Created by Sudon Noh on 2023/05/18.
 //
@@ -63,8 +63,6 @@ class HomeVC: CustomVC {
         $0.layer.cornerRadius = addBtnSize/2
     }
     
-//    var completedBtnOn: Bool = true
-//    var notCompletedBtnOn: Bool = true
     var isUpdated: Bool = false
     
     lazy var bottomIndicator : UIActivityIndicatorView = UIActivityIndicatorView().then {
@@ -355,6 +353,8 @@ extension HomeVC {
 
 extension HomeVC: SendDataDelegate {
     func refreshList(_ bool: Bool) {
-        self.isUpdated = true
+        if bool {
+            self.isUpdated = true
+        }
     }
 }

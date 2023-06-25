@@ -1,6 +1,6 @@
 //
 //  SendDataDelegate.swift
-//  WhatTodoApp
+//  WhatTodoApp/Delegate/SendDataDelegate.swift
 //
 //  Created by Sudon Noh on 2023/06/16.
 //

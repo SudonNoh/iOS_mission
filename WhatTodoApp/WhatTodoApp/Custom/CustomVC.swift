@@ -1,6 +1,6 @@
 //
 //  ViewController+Ext.swift
-//  WhatTodoApp
+//  WhatTodoApp/Custom/ViewController+Ext.swift extension CustomVC()
 //
 //  Created by Sudon Noh on 2023/05/18.
 //
@@ -15,6 +15,7 @@ class CustomVC : UIViewController {
     }
 }
 
+//MARK: - Custom Alert
 extension CustomVC {
     @objc func showErrorAlert(errMsg: String){
         let alert = UIAlertController(title: "안내", message: errMsg, preferredStyle: .alert)
