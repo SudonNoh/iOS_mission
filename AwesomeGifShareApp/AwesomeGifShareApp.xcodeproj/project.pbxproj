@@ -9,21 +9,36 @@
 /* Begin PBXBuildFile section */
 		EA54509A2A46C6E4007BCBA1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5450992A46C6E4007BCBA1 /* AppDelegate.swift */; };
 		EA54509C2A46C6E4007BCBA1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA54509B2A46C6E4007BCBA1 /* SceneDelegate.swift */; };
-		EA54509E2A46C6E4007BCBA1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA54509D2A46C6E4007BCBA1 /* ViewController.swift */; };
-		EA5450A12A46C6E4007BCBA1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA54509F2A46C6E4007BCBA1 /* Main.storyboard */; };
+		EA54509E2A46C6E4007BCBA1 /* CustomFlowCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA54509D2A46C6E4007BCBA1 /* CustomFlowCollectionViewController.swift */; };
 		EA5450A32A46C6E4007BCBA1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA5450A22A46C6E4007BCBA1 /* Assets.xcassets */; };
 		EA5450A62A46C6E4007BCBA1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EA5450A42A46C6E4007BCBA1 /* LaunchScreen.storyboard */; };
+		EAE261DF2A4B1CEA009F3BBA /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAE261DE2A4B1CEA009F3BBA /* SnapKit */; };
+		EAE261E22A4B1CF2009F3BBA /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = EAE261E12A4B1CF2009F3BBA /* Then */; };
+		EAE261E42A4B1E2F009F3BBA /* CustomFlowCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE261E32A4B1E2F009F3BBA /* CustomFlowCollectionViewCell.swift */; };
+		EAF7CF912A4BBED6006D4515 /* preView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7CF902A4BBED6006D4515 /* preView+Ext.swift */; };
+		EAF7CF932A4BC1D6006D4515 /* preViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7CF922A4BC1D6006D4515 /* preViewController+Ext.swift */; };
+		EAF7CF972A4BCF21006D4515 /* CustomFlowCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7CF962A4BCF21006D4515 /* CustomFlowCollectionViewHeader.swift */; };
+		EAF7CF992A4BD61F006D4515 /* CustomFlowCollectionViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7CF982A4BD61F006D4515 /* CustomFlowCollectionViewFooter.swift */; };
+		EAF7CF9B2A4BD879006D4515 /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7CF9A2A4BD879006D4515 /* Env.swift */; };
+		EAF7CF9F2A4BDA05006D4515 /* GiphyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7CF9E2A4BDA05006D4515 /* GiphyResponse.swift */; };
+		EAF7CFA22A4BE19A006D4515 /* SwiftyGif in Frameworks */ = {isa = PBXBuildFile; productRef = EAF7CFA12A4BE19A006D4515 /* SwiftyGif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		EA5450962A46C6E4007BCBA1 /* AwesomeGifShareApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AwesomeGifShareApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA5450992A46C6E4007BCBA1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EA54509B2A46C6E4007BCBA1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		EA54509D2A46C6E4007BCBA1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		EA5450A02A46C6E4007BCBA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		EA54509D2A46C6E4007BCBA1 /* CustomFlowCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFlowCollectionViewController.swift; sourceTree = "<group>"; };
 		EA5450A22A46C6E4007BCBA1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EA5450A52A46C6E4007BCBA1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EA5450A72A46C6E4007BCBA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EAE261E32A4B1E2F009F3BBA /* CustomFlowCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFlowCollectionViewCell.swift; sourceTree = "<group>"; };
+		EAF7CF902A4BBED6006D4515 /* preView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "preView+Ext.swift"; sourceTree = "<group>"; };
+		EAF7CF922A4BC1D6006D4515 /* preViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "preViewController+Ext.swift"; sourceTree = "<group>"; };
+		EAF7CF962A4BCF21006D4515 /* CustomFlowCollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFlowCollectionViewHeader.swift; sourceTree = "<group>"; };
+		EAF7CF982A4BD61F006D4515 /* CustomFlowCollectionViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFlowCollectionViewFooter.swift; sourceTree = "<group>"; };
+		EAF7CF9A2A4BD879006D4515 /* Env.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
+		EAF7CF9E2A4BDA05006D4515 /* GiphyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GiphyResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +46,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EAE261DF2A4B1CEA009F3BBA /* SnapKit in Frameworks */,
+				EAE261E22A4B1CF2009F3BBA /* Then in Frameworks */,
+				EAF7CFA22A4BE19A006D4515 /* SwiftyGif in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,15 +74,45 @@
 		EA5450982A46C6E4007BCBA1 /* AwesomeGifShareApp */ = {
 			isa = PBXGroup;
 			children = (
-				EA5450992A46C6E4007BCBA1 /* AppDelegate.swift */,
-				EA54509B2A46C6E4007BCBA1 /* SceneDelegate.swift */,
-				EA54509D2A46C6E4007BCBA1 /* ViewController.swift */,
-				EA54509F2A46C6E4007BCBA1 /* Main.storyboard */,
+				EAF7CF9D2A4BD9F6006D4515 /* DataSource */,
+				EAF7CF9C2A4BD8EB006D4515 /* Setting */,
+				EAF7CF952A4BC7F8006D4515 /* CustomCollectionFlowLayout */,
 				EA5450A22A46C6E4007BCBA1 /* Assets.xcassets */,
 				EA5450A42A46C6E4007BCBA1 /* LaunchScreen.storyboard */,
 				EA5450A72A46C6E4007BCBA1 /* Info.plist */,
 			);
 			path = AwesomeGifShareApp;
+			sourceTree = "<group>";
+		};
+		EAF7CF952A4BC7F8006D4515 /* CustomCollectionFlowLayout */ = {
+			isa = PBXGroup;
+			children = (
+				EA54509D2A46C6E4007BCBA1 /* CustomFlowCollectionViewController.swift */,
+				EAE261E32A4B1E2F009F3BBA /* CustomFlowCollectionViewCell.swift */,
+				EAF7CF962A4BCF21006D4515 /* CustomFlowCollectionViewHeader.swift */,
+				EAF7CF982A4BD61F006D4515 /* CustomFlowCollectionViewFooter.swift */,
+			);
+			path = CustomCollectionFlowLayout;
+			sourceTree = "<group>";
+		};
+		EAF7CF9C2A4BD8EB006D4515 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				EA5450992A46C6E4007BCBA1 /* AppDelegate.swift */,
+				EA54509B2A46C6E4007BCBA1 /* SceneDelegate.swift */,
+				EAF7CF902A4BBED6006D4515 /* preView+Ext.swift */,
+				EAF7CF922A4BC1D6006D4515 /* preViewController+Ext.swift */,
+				EAF7CF9A2A4BD879006D4515 /* Env.swift */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		EAF7CF9D2A4BD9F6006D4515 /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				EAF7CF9E2A4BDA05006D4515 /* GiphyResponse.swift */,
+			);
+			path = DataSource;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +131,11 @@
 			dependencies = (
 			);
 			name = AwesomeGifShareApp;
+			packageProductDependencies = (
+				EAE261DE2A4B1CEA009F3BBA /* SnapKit */,
+				EAE261E12A4B1CF2009F3BBA /* Then */,
+				EAF7CFA12A4BE19A006D4515 /* SwiftyGif */,
+			);
 			productName = AwesomeGifShareApp;
 			productReference = EA5450962A46C6E4007BCBA1 /* AwesomeGifShareApp.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +164,11 @@
 				Base,
 			);
 			mainGroup = EA54508D2A46C6E4007BCBA1;
+			packageReferences = (
+				EAE261DD2A4B1CEA009F3BBA /* XCRemoteSwiftPackageReference "SnapKit" */,
+				EAE261E02A4B1CF2009F3BBA /* XCRemoteSwiftPackageReference "Then" */,
+				EAF7CFA02A4BE19A006D4515 /* XCRemoteSwiftPackageReference "SwiftyGif" */,
+			);
 			productRefGroup = EA5450972A46C6E4007BCBA1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -127,7 +185,6 @@
 			files = (
 				EA5450A62A46C6E4007BCBA1 /* LaunchScreen.storyboard in Resources */,
 				EA5450A32A46C6E4007BCBA1 /* Assets.xcassets in Resources */,
-				EA5450A12A46C6E4007BCBA1 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,23 +195,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EA54509E2A46C6E4007BCBA1 /* ViewController.swift in Sources */,
+				EA54509E2A46C6E4007BCBA1 /* CustomFlowCollectionViewController.swift in Sources */,
 				EA54509A2A46C6E4007BCBA1 /* AppDelegate.swift in Sources */,
 				EA54509C2A46C6E4007BCBA1 /* SceneDelegate.swift in Sources */,
+				EAF7CF9B2A4BD879006D4515 /* Env.swift in Sources */,
+				EAF7CF972A4BCF21006D4515 /* CustomFlowCollectionViewHeader.swift in Sources */,
+				EAE261E42A4B1E2F009F3BBA /* CustomFlowCollectionViewCell.swift in Sources */,
+				EAF7CF992A4BD61F006D4515 /* CustomFlowCollectionViewFooter.swift in Sources */,
+				EAF7CF932A4BC1D6006D4515 /* preViewController+Ext.swift in Sources */,
+				EAF7CF9F2A4BDA05006D4515 /* GiphyResponse.swift in Sources */,
+				EAF7CF912A4BBED6006D4515 /* preView+Ext.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		EA54509F2A46C6E4007BCBA1 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EA5450A02A46C6E4007BCBA1 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		EA5450A42A46C6E4007BCBA1 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -291,7 +347,7 @@
 				INFOPLIST_FILE = AwesomeGifShareApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -318,7 +374,7 @@
 				INFOPLIST_FILE = AwesomeGifShareApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -356,6 +412,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EAE261DD2A4B1CEA009F3BBA /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		EAE261E02A4B1CF2009F3BBA /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		EAF7CFA02A4BE19A006D4515 /* XCRemoteSwiftPackageReference "SwiftyGif" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kirualex/SwiftyGif.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EAE261DE2A4B1CEA009F3BBA /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EAE261DD2A4B1CEA009F3BBA /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		EAE261E12A4B1CF2009F3BBA /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EAE261E02A4B1CF2009F3BBA /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+		EAF7CFA12A4BE19A006D4515 /* SwiftyGif */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EAF7CFA02A4BE19A006D4515 /* XCRemoteSwiftPackageReference "SwiftyGif" */;
+			productName = SwiftyGif;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EA54508E2A46C6E4007BCBA1 /* Project object */;
 }
