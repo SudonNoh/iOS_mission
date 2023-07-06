@@ -40,7 +40,6 @@ class CustomFlowCollectionViewController: UIViewController {
         frame: .zero,
         collectionViewLayout: collectionViewLayout
     ).then {
-        $0.backgroundColor = .green
         $0.dataSource = self
         $0.delegate = self
     }
@@ -49,17 +48,21 @@ class CustomFlowCollectionViewController: UIViewController {
         $0.tintColor = .blue
         $0.addTarget(self, action: #selector(refreshData(_:)), for: .valueChanged)
     }
+    // 현재 Offset
+    var currentOffset: Int = 0
+    // 조회 개수
+    var fetchLimit: Int = 12
+    
+    // 더 불러오는 중
+    var isFetchingMore: Bool = false
     
     override func viewDidLoad() {
-        
-        
         super.viewDidLoad()
-        self.view.backgroundColor = .blue
-        
+        self.view.backgroundColor = .white
         self.setupUI()
         self.setupCollectionView()
         
-        fetchGiphyResponse(completion: { [weak self] (gifUrlList: [URL]) in
+        fetchGiphyList(completion: { [weak self] (gifUrlList: [URL]) in
             guard let self = self else { return }
             self.gifList = gifUrlList
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
@@ -68,8 +71,12 @@ class CustomFlowCollectionViewController: UIViewController {
         })
     }
     
-    func fetchGiphyResponse(completion: @escaping ([URL]) -> Void) {
-        let url = URL(string: Env.giphyURL + "?api_key=" + Env.giphyKEY)!
+    func fetchGiphyList(offset: Int = 0,
+                        limit: Int = 3,
+                        completion: @escaping ([URL]) -> Void) {
+        
+        let url = URL(string: Env.giphyURL + "?api_key=" + Env.giphyKEY + "&offset=\(offset)&limit=\(limit)")!
+        
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, err in
             // weak self
             // 클로저 안에서 self를 사용하게 되면 강한 참조로 되기 때문에
@@ -78,6 +85,7 @@ class CustomFlowCollectionViewController: UIViewController {
             guard let self = self else { return }
             
             if err != nil {
+
                 return
             }
             
@@ -86,7 +94,10 @@ class CustomFlowCollectionViewController: UIViewController {
             guard let giphyResponse = try? JSONDecoder().decode(GiphyResponse.self, from: data),
                   let giphyList: [Giphy] = giphyResponse.data else { return }
             
+            print(#fileID, #function, #line, "- \(giphyList.count)")
+            
             let urlList: [URL] = giphyList.compactMap { $0.getUrl() }
+            print(#fileID, #function, #line, "- \(urlList.count)")
             
             completion(urlList)
         }
@@ -95,12 +106,17 @@ class CustomFlowCollectionViewController: UIViewController {
     
     @objc private func refreshData(_ sender: UIRefreshControl) {
         
-        fetchGiphyResponse(completion: { [weak self] (gifUrlList: [URL]) in
+        fetchGiphyList(completion: { [weak self] (gifUrlList: [URL]) in
             guard let self = self else { return }
-            self.gifList = gifUrlList
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-                self.collectionView.reloadData()
-                sender.endRefreshing()
+                self.gifList = gifUrlList
+                self.collectionView.performBatchUpdates({
+                    let idxSet = IndexSet(integer: 0)
+                    self.collectionView.reloadSections(idxSet)
+                }, completion: {_ in
+                    sender.endRefreshing()
+                })
             }
         })
     }
@@ -110,8 +126,14 @@ extension CustomFlowCollectionViewController {
     fileprivate func setupUI() {
         self.navigationController?.navigationBar.backgroundColor = .white
         self.navigationItem.title = "가져온 움짤"
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: self.selectionModeInfo, style: .plain, target: self, action: #selector(toggleSelectionMode(_:)))
-        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: self.selectionModeInfo,
+                                                                style: .plain,
+                                                                target: self,
+                                                                action: #selector(toggleSelectionMode(_:)))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음 가져오기: offset: \(self.currentOffset)",
+                                                                 style: .plain,
+                                                                 target: self,
+                                                                 action: #selector(fetchMore(_:)))
         
         self.view.addSubview(self.collectionView)
         
@@ -135,6 +157,10 @@ extension CustomFlowCollectionViewController {
             
             self.collectionView.reloadSections(indexSet)
         })
+    }
+    
+    @objc fileprivate func fetchMore(_ sender: UIBarButtonItem) {
+        fetchMoreGiphyList()
     }
 }
 
@@ -169,7 +195,6 @@ extension CustomFlowCollectionViewController: UICollectionViewDelegate {
     
     // 아이템 선택됨
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(#fileID, #function, #line, "- \(indexPath)")
         
         let selectedUrlString = gifList[indexPath.item].absoluteString
 
@@ -200,12 +225,10 @@ extension CustomFlowCollectionViewController: UICollectionViewDataSource {
         
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: "CustomFlowCollectionViewCell",
-            for: indexPath
-        ) as? CustomFlowCollectionViewCell else {
+            for: indexPath) as? CustomFlowCollectionViewCell,
+              let cellData : URL = self.getItem(indexPath) else {
             return UICollectionViewCell()
         }
-        
-        let cellData: URL = self.gifList[indexPath.item]
         
         cell.configureCell(cellData: cellData,
                            isSelectionMode: self.isSelectionMode,
@@ -219,7 +242,9 @@ extension CustomFlowCollectionViewController: UICollectionViewDataSource {
 extension CustomFlowCollectionViewController: UICollectionViewDelegateFlowLayout {
     
     /// header & footer 설정
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    func collectionView(_ collectionView: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
         
         switch kind {
         case UICollectionView.elementKindSectionHeader:
@@ -238,13 +263,17 @@ extension CustomFlowCollectionViewController: UICollectionViewDelegateFlowLayout
     }
     
     /// footer 크기 설정
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForFooterInSection section: Int) -> CGSize {
         let width = self.collectionView.bounds.width
         return CGSize(width: width, height: 100)
     }
     
     /// header 크기 설정
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection section: Int) -> CGSize {
         
         let width = self.collectionView.bounds.width
         
@@ -255,18 +284,105 @@ extension CustomFlowCollectionViewController: UICollectionViewDelegateFlowLayout
     }
     
     /// 몇 개씩 보여줄 거냐를 설정할 수 있다
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = (self.collectionView.bounds.width / 3) - 15
         return CGSize(width: width, height: width)
     }
     
     /// 셀 당 inset을 주는 방법
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
 }
 
+//MARK: - Helper
+extension CustomFlowCollectionViewController {
+    
+    fileprivate func getItem(_ indexPath: IndexPath) -> URL? {
+        if self.gifList.count < indexPath.item {
+            return nil
+        }
+        print(#fileID, #function, #line, "- \(indexPath.item)")
+        print(#fileID, #function, #line, "- \(self.gifList.count)")
+        
+        return self.gifList[indexPath.item]
+    }
+    
+    //MARK: - 콜렉션 뷰 UI 업데이트 관련
+    // 콜렉션 뷰에 아이템 추가 UI
+    fileprivate func insertItemsInCollectionView(_ fetchedUrls: [URL], _ self: CustomFlowCollectionViewController) {
+        // 아래 과정을 거치지 않으면 아래로 쌓이지 않는다.
+        let appendingIndexPathList: [IndexPath] = fetchedUrls
+            .enumerated()
+            .map { (index, element) -> IndexPath in
+                let startingPoint = self.gifList.count
+                return IndexPath(item:startingPoint + index, section: 0)
+            }
+        
+        self.gifList.append(contentsOf: fetchedUrls)
+        
+        DispatchQueue.main.async {
+            self.collectionView.performBatchUpdates({
+                // reload를 하게 되면 애니메이션 처리가 되지 않기 떄문에 아래와 같은 방식을 사용했다.
+                self.collectionView.insertItems(at: appendingIndexPathList)
+            })
+        }
+    }
+}
 
+//MARK: - API 호출 관련
+extension CustomFlowCollectionViewController {
+    
+    fileprivate func fetchMoreGiphyList(fetchMoreCompletion: (() -> Void)? = nil) {
+        let fetchOffset = currentOffset + fetchLimit
+        
+        fetchGiphyList(offset: fetchOffset,
+                       limit: fetchLimit,
+                       completion: { [weak self] fetchedUrls in
+            
+            guard let self = self else {return}
+            
+            self.currentOffset += fetchLimit
+            
+            insertItemsInCollectionView(fetchedUrls, self)
+            
+            fetchMoreCompletion?()
+        })
+    }
+}
+
+extension CustomFlowCollectionViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        return
+
+        let threshold = 300.0
+        
+        let bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height
+        if ((bottomEdge + threshold) >= scrollView.contentSize.height) {
+            
+            let contentHeight = scrollView.contentSize.height
+            let scrollHeight = scrollView.frame.size.height
+            
+            if contentHeight < scrollHeight {
+                return
+            }
+            
+            guard !isFetchingMore else { return }
+            
+            self.isFetchingMore = true
+            
+            fetchMoreGiphyList(fetchMoreCompletion: {
+                self.isFetchingMore = false
+            })
+        }
+    }
+}
 
 #if DEBUG
 import SwiftUI

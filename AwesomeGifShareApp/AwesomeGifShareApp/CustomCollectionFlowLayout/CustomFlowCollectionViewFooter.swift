@@ -13,18 +13,21 @@ import Then
 
 class CustomFlowCollectionViewFooter: UICollectionReusableView {
     
-    lazy var lbl: UILabel = UILabel().then {
-        $0.text = "풋터 라벨"
-        $0.font = UIFont.systemFont(ofSize: 20)
-        $0.textAlignment = .center
+    lazy var footerIndicator: UIActivityIndicatorView = UIActivityIndicatorView().then {
+        $0.style = .medium
+        $0.color = UIColor.systemGray
+        $0.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
+        $0.center = self.center
+        $0.backgroundColor = UIColor.lightGray.withAlphaComponent(0.1)
+        $0.startAnimating()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(lbl)
+        addSubview(self.footerIndicator)
         
-        lbl.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+        footerIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
         }
     }
     
