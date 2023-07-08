@@ -1,9 +1,4 @@
-//
-//  CollectionViewCell.swift
-//  CollectionView
-//
-//  Created by Sudon Noh on 2023/07/06.
-//
+
 
 import Foundation
 import UIKit
@@ -15,7 +10,12 @@ class CollectionViewCell: UICollectionViewCell {
     lazy var img: UIImageView = UIImageView().then {
         $0.image = UIImage(systemName: "photo")
         $0.contentMode = .scaleAspectFit
-        $0.backgroundColor = .yellow
+        $0.backgroundColor = .brown
+    }
+    
+    lazy var label: UILabel = UILabel().then {
+        $0.text = ""
+        $0.font = UIFont.systemFont(ofSize: 20)
     }
     
     override init(frame: CGRect) {
@@ -27,13 +27,19 @@ class CollectionViewCell: UICollectionViewCell {
         super.init(coder: coder)
     }
 
-    fileprivate func setupUI() {
+    func setupUI() {
         addSubview(img)
-        backgroundColor = .white
+        addSubview(label)
         
         img.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.width.height.equalTo(300)
+            $0.top.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview()
+        }
+        
+        label.snp.makeConstraints {
+            $0.top.equalTo(img.snp.bottom).offset(20)
+            $0.horizontalEdges.equalToSuperview()
+            $0.bottom.equalToSuperview()
         }
     }
 }
